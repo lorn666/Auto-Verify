@@ -19,7 +19,7 @@ output_file = "./output1.jsonl"
 start_line = 0
 end_line = 5
 
-tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
+tokenizer = AutoTokenizer.from_pretrained(model_path,torch_dtype=torch.float16, low_cpu_mem_usage=True, padding = False)
 # tokenizer.padding_side = 'right'
 # tokenizer.pad_token = tokenizer.eos_token
 
