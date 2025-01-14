@@ -19,11 +19,11 @@ output_file = "./output1.jsonl"
 start_line = 0
 end_line = 5
 
-tokenizer = AutoTokenizer.from_pretrained(model_path,torch_dtype=torch.float16, low_cpu_mem_usage=True, padding = False)
+tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
 # tokenizer.padding_side = 'right'
 # tokenizer.pad_token = tokenizer.eos_token
 
-model = AutoModelForCausalLM.from_pretrained(model_path).to(device)
+model = AutoModelForCausalLM.from_pretrained(model_path,torch_dtype=torch.float16).to(device)
 stop_words = ["###"," ###", "#"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
 
