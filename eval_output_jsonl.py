@@ -6,7 +6,12 @@ def calculate_accuracy(standard_file, model_file):
         standard_data = {item["question"]: item["answer"] for item in json.load(f)}
     with open(model_file, 'r', encoding='utf-8') as f:
         model_data = {item["question"]: item["answer"] for item in json.load(f)}
-    correct = sum(1 for q, ans in standard_data.items() if model_data.get(q) == ans)
+    
+    correct = 0
+    for question, answer in model_data.items():
+        if question in standard_data and standard_data[question] == answer:
+            correct += 1
+    
     return correct / len(standard_data)
 
 if __name__ == "__main__":
