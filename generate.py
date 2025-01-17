@@ -15,9 +15,9 @@ verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
 input_file = "./math_testset_annotation.jsonl"
-output_file = "./output_z_3.jsonl"
-start_line = 1125
-end_line = 1399
+output_file = "./output_0116_3.jsonl"
+start_line = 3750
+end_line = 4999
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
 # tokenizer.padding_side = 'right'
