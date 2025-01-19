@@ -133,9 +133,9 @@ def verify(model, tokenizer, prompt) -> bool:
     """
     # 获取生成的文本，去掉prompt部分
     text = generate(model, tokenizer, prompt)[len(prompt):]
-    print('********************')
+    print('*'*80)
     print('\n verification results:\n', text)
-    print('********************')
+    print('*'*80)
     
     reasons = extract_reasons(text)
     # 如果文本不含\boxed，返回True
@@ -238,9 +238,9 @@ with jsonlines.open(input_file) as reader:
         regenerate = 0
         refine = 0
         while True:
-            print('**************')
+            print('*'*80)
             print('\nprompt:\n', prompt, '\n')
-            print('**************')
+            print('*'*80)
             cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
             try:
                 generated_texts = cc.response
