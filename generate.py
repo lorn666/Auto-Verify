@@ -346,6 +346,11 @@ with jsonlines.open(input_file) as reader:
                     print('\nself-refining\n')
                     continue 
             elif refine>0:
+                print('*'*80)
+                print('step_prompt:',step_prompt)
+                print('*'*80)
+                print('self-refine-generated_text:',generated_texts)
+                print('*'*80)
                 prompt = prompt0
                 refine = 0
             
