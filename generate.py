@@ -9,15 +9,15 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device='cuda:3'
+device='cuda:0'
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
 input_file = "./math_500_sample.jsonl"
 output_file = "./output_0117_3.jsonl"
-start_line = 375
-end_line = 499
+start_line = 0
+end_line = 500
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
 # tokenizer.padding_side = 'right'
@@ -213,6 +213,7 @@ with jsonlines.open(input_file) as reader:
         regenerate = 0
         refine = 0
         while True:
+            print('\nprompt is ', prompt, '\n')
             cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
             try:
                 generated_texts = cc.response
