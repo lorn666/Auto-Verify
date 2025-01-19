@@ -326,7 +326,7 @@ with jsonlines.open(input_file) as reader:
                 if refine==0:
                     prompt0 = prompt
                     step_prompt = remove_prefix(prompt, prompt_template)
-                    prompt = self_refine_template + self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instructions = reasons)
+                    prompt = self_refine_template + self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instruction = reasons)
                     refine+=1
                     print('\nself-refining\n')
                     continue
