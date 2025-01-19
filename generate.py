@@ -10,11 +10,13 @@ from tqdm import tqdm
 from itertools import islice
 
 device='cuda:0'
+verifier_device = 'cuda:1'
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
+verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
-input_file = "./math_testset_annotation.jsonl"
+input_file = "./math_500_sample.jsonl "
 output_file = "./output_0117_3.jsonl"
 start_line = 0
 end_line = 500
@@ -28,6 +30,17 @@ model = AutoModelForCausalLM.from_pretrained(model_path,
         ##low_cpu_mem_usage=True,
         #device_map="auto"
         ).to(device)
+
+verifier_tokenizer = AutoTokenizer.from_pretrained(verifier_model_path, padding = False)
+# tokenizer.padding_side = 'right'
+# tokenizer.pad_token = tokenizer.eos_token
+
+verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path, 
+        torch_dtype=torch.bfloat16, 
+        ##low_cpu_mem_usage=True,
+        #device_map="auto"
+        ).to(device)
+
 stop_words = ["###"," ###", "#"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
 
@@ -174,6 +187,16 @@ def extract_boxed_content(text: str) -> str:
         return result
     return ""
 
+def generate_verification_prompt(question, current_step, context):
+    prompt = f"Question:\n{question}\n"
+    prompt += f"Context:\n{context}\n"
+    prompt += f'''Verify Step: {current_step}\n
+    Is this step correct?(Yes/No).
+    If the step is incorrect (No), please provide the following: **Explanation:** Explain why the original step is incorrect. And respond \\boxed{{No}} on a new line.
+    If the step is correct (Yes), please respond \\boxed{{Yes}}
+    '''
+    return prompt
+
 
 stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops = stop_words_ids)])
 
@@ -232,7 +255,7 @@ with jsonlines.open(input_file) as reader:
             filtered_context = [context for context in extract_context if context not in prompt_template]
             Context = '\n'.join(filtered_context)
             verify_prompt = verifier_prompt_template.format(Question = Question, Context = Context, verified_step = generated_texts)+verifier_prompt_template2
-            results, reasons = verify(model, tokenizer, verify_prompt)
+            results, reasons = verify(verifier_model, verifier_tokenizer, verify_prompt)
             if results == False and refine<=2:
                 if refine==0:
                     prompt0 = prompt
