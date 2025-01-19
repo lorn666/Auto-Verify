@@ -227,8 +227,8 @@ prompt_template = (
 # )
 verifier_prompt_template = '''
     You are a math question verifier.
-    Please answer '\boxed{yes}' or '\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.\n
-    Your response should be in the form of: results:\boxed{no/yes} \n reasons:
+    Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.\n
+    Your response should be in the form of: results:\\boxed{no/yes} \n reasons:
     
     #####
     
@@ -237,8 +237,8 @@ verifier_prompt_template = '''
     To be verified step: 
     factor $x^2+x-6$, which is $(x-3)(x+2)$
     
-    results:\boxed{no}
-    \reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
+    results:\\boxed{no}
+    \\reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
     
     #####
     
@@ -248,8 +248,8 @@ verifier_prompt_template = '''
     To be verified step: 
     So the number of asymptotes should be 2.
     
-    results:\boxed{yes}
-    \reasons: since the asymptotes for $x^2+x-6$ is x=2 and x=-3, the number of asymptotes should be 2.
+    results:\\boxed{yes}
+    \\reasons: since the asymptotes for $x^2+x-6$ is x=2 and x=-3, the number of asymptotes should be 2.
     
     #####    
 '''
