@@ -225,11 +225,35 @@ prompt_template = (
 #     "Question:{Question}\n Context:{Context} \n to be verified step:{verified_step}\n"
 #     "The to be verified step is only one step for the solution process, so you don't need to consider whether the step solves the question or not.\n"
 # )
-verifier_prompt_template = (
-    "You are a math question verifier."
-    "Context:{Context} \n to be verified step:{verified_step}\n"
-)
-verifier_prompt_template2 =  r" Please answer '\boxed{yes}' or '\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.\n Your response should be in the form of: results:\boxed{no/yes} \n reasons:"
+verifier_prompt_template = '''
+    You are a math question verifier.
+    Please answer '\boxed{yes}' or '\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.\n
+    Your response should be in the form of: results:\boxed{no/yes} \n reasons:
+    
+    #####
+    
+    Coutext: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+    Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
+    To be verified step: 
+    factor $x^2+x-6$, which is $(x-3)(x+2)$
+    
+    results:\boxed{no}
+    \reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
+    
+    #####
+    
+    Coutext: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+    Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
+    Step 4: the asymptotes for $x^2+x-6$ should be x=2 and x = -3.
+    To be verified step: 
+    So the number of asymptotes should be 2.
+    
+    results:\boxed{yes}
+    \reasons: since the asymptotes for $x^2+x-6$ is x=2 and x=-3, the number of asymptotes should be 2.
+    
+    #####    
+'''
+verifier_prompt_template2 =  "Context:{Context} \nTo be verified step:{verified_step}\n"
 
 regenerate_prompt_template = (
     "Please regenerate the last step based on the instruction:"
@@ -264,7 +288,7 @@ with jsonlines.open(input_file) as reader:
             extract_context = [cc.sources[int(i)] for i in indices]
             filtered_context = [context for context in extract_context if context not in prompt_template]
             Context = '\n'.join(filtered_context)
-            verify_prompt = verifier_prompt_template.format(Question = Question, Context = Context, verified_step = generated_texts)+verifier_prompt_template2
+            verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context, verified_step = generated_texts)
             results, reasons = verify(verifier_model, verifier_tokenizer, verify_prompt)
             if results == False and refine<=2:
                 if refine==0:
