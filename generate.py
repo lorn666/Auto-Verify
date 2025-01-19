@@ -41,7 +41,7 @@ verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path,
         #device_map="auto"
         ).to(verifier_device )
 
-stop_words = ["###"," ###", "#"]
+stop_words = ["###"," ###", "#", "#####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
 
 class sub_ContextCiter(ContextCiter):
@@ -97,7 +97,7 @@ def generate(model, tokenizer, prompt):
         do_sample=True,
         top_k=32,
         temperature=0.7,
-        #stopping_criteria=stopping_criteria,
+        stopping_criteria=stopping_criteria,
         #repetition_penalty=1.1,      
     )
     generated_texts = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
