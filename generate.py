@@ -87,7 +87,9 @@ class StoppingCriteriaSub(StoppingCriteria):
  
 def generate(model, tokenizer, prompt):
     inputs = tokenizer(prompt, return_tensors="pt").to(verifier_device)
-
+    print('*'*80)
+    print('verification prompt:\n',prompt)
+    print('*'*80)
     outputs = model.generate(
         **inputs,
         max_new_tokens=256,
