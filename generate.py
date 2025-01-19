@@ -95,7 +95,7 @@ def generate(model, tokenizer, prompt):
         do_sample=True,
         top_k=32,
         temperature=0.7,
-        stopping_criteria=stopping_criteria,
+        #stopping_criteria=stopping_criteria,
         #repetition_penalty=1.1,      
     )
     generated_texts = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
