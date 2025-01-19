@@ -202,6 +202,19 @@ def generate_verification_prompt(question, current_step, context):
     '''
     return prompt
 
+def remove_prefix(string_a: str, string_b: str) -> str:
+    """
+    从string_a中移除以string_b开头的前缀
+    Args:
+        string_a: 原始字符串
+        string_b: 需要移除的前缀
+    Returns:
+        str: 移除前缀后的字符串
+    """
+    if string_a.startswith(string_b):
+        return string_a[len(string_b):]
+    return string_a
+
 
 stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops = stop_words_ids)])
 
@@ -255,6 +268,25 @@ verifier_prompt_template = '''
 '''
 verifier_prompt_template2 =  "Context:{Context} \nTo be verified step:{verified_step}\n"
 
+self_refine_template = '''
+You are a math problem solver.Since the last step is incorrect, now you have to regenerate the last step based on the previous step, question and instruction.
+The instruction explains why the last step is incorrect. 
+
+#####
+
+Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
+Step 2: to find the zero point, we have to factor the $x^2+x-6$.
+To be regenerated step: Step 3:factor $x^2+x-6$, which is $(x-3)(x+2)$
+Instruction: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$
+
+regenerated step: steps 3:factor $x^2+x-6$, which is $(x+3)(x-2)$
+
+#####
+'''
+self_refine_template2 = '{steps}\nTo be regenerated step: {target_step}\nInstruction: {instruction}\n\nregenerated step: '
+
+
 regenerate_prompt_template = (
     "Please regenerate the last step based on the instruction:"
 )
@@ -293,12 +325,13 @@ with jsonlines.open(input_file) as reader:
             if results == False and refine<=2:
                 if refine==0:
                     prompt0 = prompt
-                    prompt = prompt+regenerate_prompt_template+reasons
+                    step_prompt = remove_prefix(prompt, prompt_template)
+                    prompt = self_refine_template + self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instructions = reasons)
                     refine+=1
                     print('\nself-refining\n')
                     continue
                 else:
-                    prompt = prompt0+regenerate_prompt_template+reasons
+                    prompt = self_refine_template + self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instructions = reasons)
                     refine+=1
                     print('\nself-refining\n')
                     continue 
@@ -309,7 +342,7 @@ with jsonlines.open(input_file) as reader:
             print('\nVerification bool results:', results)
             # print('\ngenerated steps:\n', generated_texts, end = '\n')
             prompt = prompt+generated_texts
-            if r'\boxed' in generated_texts or i==30:
+            if r'\boxed' in generated_texts or i==25:
                 final_answer = extract_boxed_content(generated_texts)
                 output_item = {
                 'question': Question,
