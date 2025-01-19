@@ -39,7 +39,7 @@ verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path,
         torch_dtype=torch.bfloat16, 
         ##low_cpu_mem_usage=True,
         #device_map="auto"
-        ).to(device)
+        ).to(verifier_device )
 
 stop_words = ["###"," ###", "#"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
@@ -86,7 +86,7 @@ class StoppingCriteriaSub(StoppingCriteria):
         return False
  
 def generate(model, tokenizer, prompt):
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+    inputs = tokenizer(prompt, return_tensors="pt").to(verifier_device)
 
     outputs = model.generate(
         **inputs,
