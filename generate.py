@@ -224,9 +224,8 @@ verifier_prompt_template = (
     "You are a math question verifier."
     "Question:{Question}\n Context:{Context} \n to be verified step:{verified_step}\n"
     "The to be verified step is only one step for the solution process, so you don't need to consider whether the step solves the question or not.\n"
-    "Please answer 'yes' or 'no' and the reasons to verify whether the to be verified step can be derived from the Question and Context without hallucination or error.\n"
 )
-verifier_prompt_template2 =  r"Your response should be in the form of: results:\boxed{no/yes} \n reasons:"
+verifier_prompt_template2 =  r" Please answer '\boxed{yes}' or '\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Question and Context without hallucination or error.\n Your response should be in the form of: results:\boxed{no/yes} \n reasons:"
 
 regenerate_prompt_template = (
     "Please regenerate the last step based on the instruction:"
