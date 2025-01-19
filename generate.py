@@ -356,7 +356,8 @@ with jsonlines.open(input_file) as reader:
             
             print('\nVerification bool results:', results)
             # print('\ngenerated steps:\n', generated_texts, end = '\n')
-            prompt = prompt+generated_texts
+            if refine==0:
+                prompt = prompt+generated_texts
             if r'\boxed' in generated_texts or i==25:
                 final_answer = extract_boxed_content(generated_texts)
                 output_item = {
