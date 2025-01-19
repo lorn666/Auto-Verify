@@ -16,7 +16,7 @@ verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
-input_file = "./math_500_sample.jsonl"
+input_file = "./math_testset_annotation.jsonl"
 output_file = "./output_0118_0.jsonl"
 start_line = 0
 end_line = 500
@@ -167,7 +167,7 @@ def extract_boxed_content(text: str) -> str:
         str: \boxed{}中的内容，如果没找到返回空字符串
     """
     # 添加调试打印
-    print("输入文本:", text)
+    # print("输入文本:", text)
     if r'\boxed' not in text:
         return ""
     # 找到\boxed{后的位置
@@ -273,7 +273,7 @@ with jsonlines.open(input_file) as reader:
                 refine = 0
             
             print('\nVerification bool results:', results)
-            print('\ngenerated steps:\n', generated_texts, end = '\n')
+            # print('\ngenerated steps:\n', generated_texts, end = '\n')
             prompt = prompt+generated_texts
             if r'\boxed' in generated_texts or i==30:
                 final_answer = extract_boxed_content(generated_texts)
