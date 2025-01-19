@@ -96,7 +96,7 @@ def generate(model, tokenizer, prompt):
         num_return_sequences=num_votes,
         do_sample=True,
         top_k=32,
-        temperature=0.7,
+        temperature=0.3,
         stopping_criteria=stopping_criteria,
         #repetition_penalty=1.1,      
     )
@@ -210,7 +210,7 @@ generate_kwargs = {
     'num_return_sequences': num_votes,
     'do_sample': True,
     'top_k': 32,
-    'temperature': 0.7,
+    'temperature': 0.3,
     'stopping_criteria': stopping_criteria,
 }
 
