@@ -158,6 +158,7 @@ def count_steps(text: str) -> int:
     # 使用正则表达式查找所有包含"Step"的实例
     pattern = r'Step \d+'
     matches = re.findall(pattern, text)
+    print('Step Count:', len(matches))
     return len(matches)
 
 def extract_boxed_content(text: str) -> str:
