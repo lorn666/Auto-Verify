@@ -46,8 +46,8 @@ verifier_model = model
 
 stop_words = ["###"," ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
-
-class sub_ContextCiter(ContextCiter):
+    
+    class sub_ContextCiter(ContextCiter):
     def __init__(
         self,
         model: Any,
@@ -56,9 +56,10 @@ class sub_ContextCiter(ContextCiter):
         query: str,
         generate_kwargs: Optional[Dict[str, Any]] = None,
         prompt_template = '',
+        num_ablations = 64,
     ) -> None:
-        super().__init__(model, tokenizer, context, query, generate_kwargs = generate_kwargs, prompt_template = prompt_template)
-
+        super().__init__(model, tokenizer, context, query, generate_kwargs = generate_kwargs, prompt_template = prompt_template, num_ablations=num_ablations)
+    
     def _get_prompt_ids(
         self,
         mask = None,
@@ -337,7 +338,10 @@ with jsonlines.open(input_file) as reader:
             print('*'*80)
             print('\nprompt:\n', prompt, '\n')
             print('*'*80)
-            cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
+            if refine==0:
+                cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
+            else:
+                cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}', num_ablations = 1)
             try:
                 generated_texts = cc.response
             except:
