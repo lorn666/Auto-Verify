@@ -47,7 +47,7 @@ verifier_model = model
 stop_words = ["###"," ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
     
-    class sub_ContextCiter(ContextCiter):
+class sub_ContextCiter(ContextCiter):
     def __init__(
         self,
         model: Any,
@@ -167,7 +167,9 @@ def verify(model, tokenizer, prompt) -> bool:
     """
     # 获取生成的文本，去掉prompt部分
     for i in range(3):
-        text = generate(model, tokenizer, prompt)[len(prompt):]
+        verifier_cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}', num_ablations=1)
+        # text = generate(model, tokenizer, prompt)[len(prompt):]
+        text = verifier_cc.response
         print('*'*80)
         print('\n verification results:\n', text)
         print('*'*80)
@@ -338,10 +340,7 @@ with jsonlines.open(input_file) as reader:
             print('*'*80)
             print('\nprompt:\n', prompt, '\n')
             print('*'*80)
-            if refine==0:
-                cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
-            else:
-                cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}', num_ablations = 1)
+            cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
             try:
                 generated_texts = cc.response
             except:
