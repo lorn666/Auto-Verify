@@ -165,26 +165,29 @@ def verify(model, tokenizer, prompt) -> bool:
         bool: True 如果是 yes 或没有 \boxed，False 如果是 no
     """
     # 获取生成的文本，去掉prompt部分
-    text = generate(model, tokenizer, prompt)[len(prompt):]
-    print('*'*80)
-    print('\n verification results:\n', text)
-    print('*'*80)
-    
-    reasons = extract_reasons(text)
-    # 如果文本不含\boxed，返回True
-    if r'\boxed' not in text:
-        return True, reasons
-    
-    # 查找第一个\boxed{}中的内容
-    pattern = r'\\boxed{([^}]*)}'
-    match = re.search(pattern, text)
-    
-    if match:
-        answer = match.group(1).strip().lower()
-        # 返回True如果是yes，False如果是no
+    for i in range(3):
+        text = generate(model, tokenizer, prompt)[len(prompt):]
+        print('*'*80)
+        print('\n verification results:\n', text)
+        print('*'*80)
+        
+        reasons = extract_reasons(text)
+        # 如果文本不含\boxed，返回True
+        if r'\boxed' not in text:
+            continue
+        
+        # 查找第一个\boxed{}中的内容
+        pattern = r'\\boxed{([^}]*)}'
+        match = re.search(pattern, text)
+        
+        if match:
+            answer = match.group(1).strip().lower()
+            # 返回True如果是yes，False如果是no
+            if ('no' not in answer) and ('yes' not in answer):
+                continue
+        
+        # 如果没有找到匹配（但有\boxed），返回True
         return 'no' not in answer, reasons
-    
-    # 如果没有找到匹配（但有\boxed），返回True
     return True, reasons
 
 def count_steps(text: str) -> int:
