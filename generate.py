@@ -9,18 +9,18 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device='cuda:1'
-verifier_device = 'cuda:1'
+device='cuda:0'
+verifier_device = 'cuda:0'
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
 input_file = "./math_testset_annotation.jsonl"
-output_file = "./output_0119_no_sumary.jsonl"
+output_file = "./output_0119_sumary.jsonl"
 start_line = 0
 end_line = 500
-threshold = -10000
+threshold = 1e-7
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
 # tokenizer.padding_side = 'right'
