@@ -17,7 +17,7 @@ model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
 input_file = "./math_testset_annotation.jsonl"
-output_file = "./output_0118_0.jsonl"
+output_file = "./output_0119_sumary.jsonl"
 start_line = 0
 end_line = 500
 
