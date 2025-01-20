@@ -31,15 +31,17 @@ model = AutoModelForCausalLM.from_pretrained(model_path,
         #device_map="auto"
         ).to(device)
 
-verifier_tokenizer = AutoTokenizer.from_pretrained(verifier_model_path, padding = False)
-# tokenizer.padding_side = 'right'
-# tokenizer.pad_token = tokenizer.eos_token
+# verifier_tokenizer = AutoTokenizer.from_pretrained(verifier_model_path, padding = False)
+# # tokenizer.padding_side = 'right'
+# # tokenizer.pad_token = tokenizer.eos_token
 
-verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path, 
-        torch_dtype=torch.bfloat16, 
-        ##low_cpu_mem_usage=True,
-        #device_map="auto"
-        ).to(verifier_device )
+# verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path, 
+#         torch_dtype=torch.bfloat16, 
+#         ##low_cpu_mem_usage=True,
+#         #device_map="auto"
+#         ).to(verifier_device )
+verifier_tokenizer = tokenizer
+verifier_model = model
 
 stop_words = ["###"," ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
@@ -315,7 +317,7 @@ with jsonlines.open(input_file) as reader:
                 
             regenerate = 0
             raw_results = cc.get_attributions()
-            indices = np.where(raw_results > -1000)[0]
+            indices = np.where(raw_results > 1e-7)[0]
             extract_context = [cc.sources[int(i)] for i in indices]
             filtered_context = [context for context in extract_context if context not in prompt_template]
             Context = '\n'.join(filtered_context)
