@@ -315,7 +315,7 @@ with jsonlines.open(input_file) as reader:
                 
             regenerate = 0
             raw_results = cc.get_attributions()
-            indices = np.where(raw_results > 1e-7)[0]
+            indices = np.where(raw_results > -1000)[0]
             extract_context = [cc.sources[int(i)] for i in indices]
             filtered_context = [context for context in extract_context if context not in prompt_template]
             Context = '\n'.join(filtered_context)
