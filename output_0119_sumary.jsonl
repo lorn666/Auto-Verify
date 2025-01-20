@@ -19,3 +19,4 @@
 {"question": "Find the sum of all integers that satisfy these conditions: \\[\n|x|+1>7\\text{ and }|x+1|\\le7.\n\\]", "answer": "-54"}
 {"question": "What is the number of units in the distance from the origin to the point $(-8,6)$ in a coordinate system?", "answer": "10"}
 {"question": "The two endpoints of a segment are at $(1,4)$ and $(1,10)$. What is the sum of the coordinates of the midpoint of the segment?", "answer": "8"}
+{"question": "Evaluate $i^5+i^{-25}+i^{45}$.", "answer": "i-1"}

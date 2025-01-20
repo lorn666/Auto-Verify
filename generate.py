@@ -16,10 +16,10 @@ verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
-input_file = "./math_testset_annotation.jsonl"
-output_file = "./output_0119_sumary.jsonl"
-start_line = 3
-end_line = 4
+input_file = "./MATH_500.jsonl"
+output_file = "./output_0120-default_config_sumary_0_250.jsonl"
+start_line = 0
+end_line = 250
 threshold = 1e-7
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
@@ -96,15 +96,15 @@ def generate(model, tokenizer, prompt):
     outputs = model.generate(
         **inputs,
         max_new_tokens=256,
-        num_return_sequences=num_votes,
-        do_sample=True,
-        top_k=50,
-        top_p=0.95,
-        temperature=0.3,
+        #num_return_sequences=num_votes,
+        #do_sample=True,
+        #top_k=50,
+        #top_p=0.95,
+        #temperature=0.3,
+        #num_beams=2,
+        #repetition_penalty=1.2,
+        #no_repeat_ngram_size=3
         stopping_criteria=stopping_criteria,
-        num_beams=2,
-        repetition_penalty=1.2,
-        no_repeat_ngram_size=3
     )
     generated_texts = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
     # print(generated_texts[0])
@@ -187,7 +187,7 @@ def verify(model, tokenizer, prompt) -> bool:
                 continue
         
         # 如果没有找到匹配（但有\boxed），返回True
-        return 'no' not in answer, reasons
+            return 'no' not in answer, reasons
     return True, reasons
 
 def count_steps(text: str) -> int:
@@ -254,10 +254,10 @@ stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops = stop_words
 
 generate_kwargs = {
     'max_new_tokens': max_new_tokens,
-    'num_return_sequences': num_votes,
-    'do_sample': True,
-    'top_k': 32,
-    'temperature': 0.3,
+    #'num_return_sequences': num_votes,
+    #'do_sample': True,
+    #'top_k': 32,
+    #'temperature': 0.3,
     'stopping_criteria': stopping_criteria,
 }
 
