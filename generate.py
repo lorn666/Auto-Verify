@@ -17,9 +17,10 @@ model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
 input_file = "./math_testset_annotation.jsonl"
-output_file = "./output_0119_sumary.jsonl"
+output_file = "./output_0119_no_sumary.jsonl"
 start_line = 0
 end_line = 500
+threshold = -10000
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
 # tokenizer.padding_side = 'right'
@@ -317,7 +318,7 @@ with jsonlines.open(input_file) as reader:
                 
             regenerate = 0
             raw_results = cc.get_attributions()
-            indices = np.where(raw_results > 1e-7)[0]
+            indices = np.where(raw_results > threshold)[0]
             extract_context = [cc.sources[int(i)] for i in indices]
             filtered_context = [context for context in extract_context if context not in prompt_template]
             Context = '\n'.join(filtered_context)
