@@ -106,14 +106,14 @@ def generate(model, tokenizer, prompt):
 
 def extract_reasons(text: str) -> str:
     """
-    提取文本中'reasons:'之后的内容
+    提取文本中'reasons:'之后到第一个#之前的内容
     Args:
         text: 包含reasons:的文本
     Returns:
-        str: reasons后面的内容，如果没找到返回空字符串
+        str: reasons后面到第一个#之前的内容，如果没找到返回空字符串
     """
-    # 使用正则表达式查找reasons:后的所有内容
-    pattern = r'reasons:(.*?)(?=\\boxed|$)'  # 匹配到下一个\boxed或文本结束
+    # 使用正则表达式查找reasons:后到第一个#之前的所有内容
+    pattern = r'reasons:(.*?)(?=#|$)'  # 匹配到第一个#或文本结束
     match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)  # DOTALL让.也能匹配换行符
     
     if match:
@@ -122,7 +122,6 @@ def extract_reasons(text: str) -> str:
         return reasons
     
     return ""
-    
 def verify(model, tokenizer, prompt) -> bool:
     """
     生成文本并检查第一个\boxed{}中的答案
@@ -322,6 +321,7 @@ with jsonlines.open(input_file) as reader:
             Context = '\n'.join(filtered_context)
             verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context, verified_step = generated_texts)
             results, reasons = verify(verifier_model, verifier_tokenizer, verify_prompt)
+            
             if results == False and refine<=2:
                 if refine==0:
                     prompt0 = prompt
