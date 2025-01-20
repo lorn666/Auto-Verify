@@ -109,11 +109,11 @@ def generate(model, tokenizer, prompt):
 
 def extract_reasons(text: str) -> str:
     """
-    提取文本中'reasons:'之后到第一个#之前的内容
+    提取文本中'reasons:'之后到第一个#之前的内容，并去除连续重复3次以上的句子
     Args:
         text: 包含reasons:的文本
     Returns:
-        str: reasons后面到第一个#之前的内容，如果没找到返回空字符串
+        str: reasons后面到第一个#之前的内容，去除重复后的结果，如果没找到返回空字符串
     """
     # 使用正则表达式查找reasons:后到第一个#之前的所有内容
     pattern = r'reasons:(.*?)(?=#|$)'  # 匹配到第一个#或文本结束
@@ -122,7 +122,33 @@ def extract_reasons(text: str) -> str:
     if match:
         # 提取并清理文本
         reasons = match.group(1).strip()
-        return reasons
+        
+        # 按句子分割文本
+        sentences = re.split(r'[.!?]+\s*', reasons)
+        
+        # 去除空字符串
+        sentences = [s.strip() for s in sentences if s.strip()]
+        
+        # 去除连续重复3次以上的句子
+        result = []
+        i = 0
+        while i < len(sentences):
+            count = 1
+            j = i + 1
+            # 计算当前句子连续重复次数
+            while j < len(sentences) and sentences[j] == sentences[i]:
+                count += 1
+                j += 1
+            
+            # 根据重复次数添加句子
+            if count < 3:
+                result.extend([sentences[i]] * count)
+            else:
+                result.append(sentences[i])
+            
+            i = j
+            
+        return '. '.join(result)
     
     return ""
 def verify(model, tokenizer, prompt) -> bool:
