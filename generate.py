@@ -351,7 +351,9 @@ with jsonlines.open(input_file) as reader:
             extract_context = [cc.sources[int(i)] for i in indices]
             filtered_context = [context for context in extract_context if context not in prompt_template]
             Context = '\n'.join(filtered_context)
-            verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context, verified_step = generated_texts)
+            if refine==0:
+                Context0=Context
+            verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
             results, reasons = verify(verifier_model, verifier_tokenizer, verify_prompt)
             
             if results == False and refine<=2:
