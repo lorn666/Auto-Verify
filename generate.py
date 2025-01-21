@@ -96,8 +96,8 @@ class sub_ContextCiter(ContextCiter):
         '''
         prompt1 =  self.prompt_template.format(context=few_shot_context1, query=self.query) 
         prompt2 =  self.prompt_template.format(context=few_shot_context2, query=self.query)  
-        messages = [{"role": "user", "content": prompt1}, {"role": "assistant", "content": few_shot_answer1}]
-        messages.extend([{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}])
+        messages = [{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}]
+        # messages.extend([{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}])
         messages.append({"role": "user", "content": final_prompt})
         print(messages)
         chat_prompt = self.tokenizer.apply_chat_template(
