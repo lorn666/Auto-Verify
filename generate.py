@@ -296,7 +296,7 @@ generate_kwargs = {
     #'num_return_sequences': num_votes,
     #'do_sample': True,
     #'top_k': 32,
-    #'temperature': 0.3,
+    'temperature': 0.3,
     #'repetition_penalty':1.2,
     #'stopping_criteria': stopping_criteria,
 }
