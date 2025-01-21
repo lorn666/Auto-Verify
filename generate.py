@@ -319,7 +319,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
         Step 4: the asymptotes for $x^2+x-6$ should be x=2 and x = -3.
         To be verified step: 
-        So the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.
+        So the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.
         '''},
         {"role": "model", "content":'''
          results:\\boxed{No}
