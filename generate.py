@@ -99,7 +99,7 @@ class sub_ContextCiter(ContextCiter):
         messages = [{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}]
         # messages.extend([{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}])
         messages.append({"role": "user", "content": final_prompt})
-        print(messages)
+        # print(messages)
         chat_prompt = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
