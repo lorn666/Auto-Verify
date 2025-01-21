@@ -443,10 +443,10 @@ with jsonlines.open(input_file) as reader:
         regenerate = 0
         refine = 0
         while True:
+            prompt = prompt.replace("<|eot_id|>", "\n")+"<|eot_id|>"
             print('*'*80)
             print('\nprompt:\n', prompt, '\n')
             print('*'*80)
-            prompt = prompt.replace("<|eot_id|>", "\n")+"<|eot_id|>"
             cc = sub_ContextCiter(model, tokenizer, prompt, query, generate_kwargs=generate_kwargs, )
             try:
                 generated_texts = cc.response
