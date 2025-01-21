@@ -103,7 +103,7 @@ def generate(model, tokenizer, prompt):
         #top_p=0.95,
         #temperature=0.3,
         #num_beams=2,
-        repetition_penalty=1.2,
+        # repetition_penalty=1.2,
         #no_repeat_ngram_size=3
         stopping_criteria=stopping_criteria,
     )
@@ -261,7 +261,7 @@ generate_kwargs = {
     #'do_sample': True,
     #'top_k': 32,
     #'temperature': 0.3,
-    'repetition_penalty':1.2,
+    #'repetition_penalty':1.2,
     'stopping_criteria': stopping_criteria,
 }
 
