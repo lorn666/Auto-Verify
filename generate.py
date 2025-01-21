@@ -56,7 +56,7 @@ class sub_ContextCiter(ContextCiter):
         context: str,
         query: str,
         generate_kwargs: Optional[Dict[str, Any]] = None,
-        prompt_template = "Context: {context}\n\nQuery: {query}",
+        prompt_template = "Context: {context}\n\nInstruction: {query}",
         num_ablations = 64,
     ) -> None:
         super().__init__(model, tokenizer, context, query, generate_kwargs = generate_kwargs, prompt_template = prompt_template, num_ablations=num_ablations)
@@ -373,7 +373,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
 #     r"Please write the final answer with \boxed{} ###\n"
 # )
 # query = 'You are a math problem solver. You are suppose to output the next potential step. Do not output more than 1 steps. You have to output step No.before the step. If the answer can be derived from previous steps? if yes, output \\boxed{final answer}. If not, What is the potential next step based on the previous steps and question?'
-query = 'You are a math problem solver. Please output the possible answer of the question in \\boxed{} based on previous steps.'
+query = r'You are a math problem solver. Please output the next potential step based on the previous steps and question. If the answer can be derived from previous step, please output it with \boxed{}'
 
 # verifier_prompt_template = (
 #     "You are a math question verifier."
