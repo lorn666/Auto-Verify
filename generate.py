@@ -288,7 +288,8 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
     messages = [
         {"role": "system", "content": '''
         You are a math question verifier.
-        Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.\n
+        Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.
+        If the 'to be verified step' contains duplicate content, Please answer \\boxed{no}''
         Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
         {"role": "user", "content": '''
          Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
@@ -311,6 +312,18 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         {"role": "model", "content":'''
          results:\\boxed{yes}
         \\reasons: since the asymptotes for $x^2+x-6$ is x=2 and x=-3, the number of asymptotes should be 2.
+         '''
+        },
+        {"role": "user", "content": '''
+        Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+        Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
+        Step 4: the asymptotes for $x^2+x-6$ should be x=2 and x = -3.
+        To be verified step: 
+        So the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.the number of asymptotes should be 2.
+        '''},
+        {"role": "model", "content":'''
+         results:\\boxed{No}
+        \\reasons: The to be verifier step contains duplicate content. Please remove duplicate content.
          '''
         },
         {"role": "user", "content": prompt},
