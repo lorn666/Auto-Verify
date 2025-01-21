@@ -342,7 +342,7 @@ with jsonlines.open(input_file) as reader:
             print('*'*80)
             cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
             try:
-                generated_texts = cc.response
+                generated_texts = cc.response.replace("<|eot_id|>", "###")
             except:
                 print("none type")
             if count_steps(generated_texts)>=3:
