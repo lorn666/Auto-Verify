@@ -76,26 +76,38 @@ class sub_ContextCiter(ContextCiter):
     #     else:
     #         return chat_prompt_ids
     
-    # def _get_prompt_ids(
-    #     self,
-    #     mask = None,
-    #     return_prompt: bool = False,
-    # ):
-    #     context = self.partitioner.get_context(mask)
-    #     prompt = self.prompt_template.format(context=context, query=self.query)
-    #     messages = [{"role": "user", "content": prompt}]
-    #     few_shot_context1 = '''
-        
-    #     '''
-    #     chat_prompt = self.tokenizer.apply_chat_template(
-    #         messages, tokenize=False, add_generation_prompt=True
-    #     )
-    #     chat_prompt_ids = self.tokenizer.encode(chat_prompt, add_special_tokens=False)
+    def _get_prompt_ids(
+        self,
+        mask = None,
+        return_prompt: bool = False,
+    ):
+        context = self.partitioner.get_context(mask)
+        final_prompt = self.prompt_template.format(context=context, query=self.query)
+        few_shot_context1 = '''Question: Evaluate $i^5+i^{-25}+i^{45}$.
+        Step 1: The powers of $i$ follow a cyclical pattern: $i^1 = i$, $i^2 = -1$, $i^3 = -i$, $i^4 = 1$, and then the cycle repeats. 
+        We can use this pattern to simplify each term in the expression. 
+        '''
+        few_shot_answer1 = 'Step 2: For $i^5$, we can rewrite it as $i^4 \cdot i$, which simplifies to $1 \cdot i = i$. For $i^{-25}$, we can rewrite it as $\frac{1}{i^{25}}$. Since $i^{25}$ is equivalent to $(i^4)^6 \cdot i$, and $i^4 = 1$, we have $i^{25} = 1^6 \cdot i = i$.'
+        few_shot_context2 = '''Question: What power of 4 is equal to 8? \
+        Step 1: Express 8 as a power of 2: $8 = 2^3$
+        Step 2:Express 4 as a power of 2: $4 = 2^2$
+        Step 3:Equate the exponents: $2x = 3$ $x=\frac{3}{2}$'''
+        few_shot_answer2 = '''Final answer can be derived from previous steps, which is \\boxed{\\frac{3}{2}}
+        '''
+        prompt1 =  self.prompt_template.format(context=few_shot_context1, query=self.query) 
+        prompt2 =  self.prompt_template.format(context=few_shot_context2, query=self.query)  
+        messages = [{"role": "user", "content": prompt1}, {"role": "assistant", "content": few_shot_answer1}]
+        messages.extend([{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}])
+        messages.append({"role": "user", "content": final_prompt})
+        chat_prompt = self.tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+        chat_prompt_ids = self.tokenizer.encode(chat_prompt, add_special_tokens=False)
 
-    #     if return_prompt:
-    #         return chat_prompt_ids, chat_prompt
-    #     else:
-    #         return chat_prompt_ids
+        if return_prompt:
+            return chat_prompt_ids, chat_prompt
+        else:
+            return chat_prompt_ids
     
 class StoppingCriteriaSub(StoppingCriteria):
     def __init__(self, stops=None):
