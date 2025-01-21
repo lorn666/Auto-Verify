@@ -83,6 +83,7 @@ class sub_ContextCiter(ContextCiter):
     ):
         context = self.partitioner.get_context(mask)
         final_prompt = self.prompt_template.format(context=context, query=self.query)
+        system = r'You are a math problem solver trying to solve the Question demonstrated in the context step by step. If the answer can be derived from previous step, please output the final answer with \boxed{} directly!If not, please output the next potential step based on the previous steps and question with Step No.in the front. . Please only output 1 step everytime.'
         few_shot_context1 = r'''Question: Evaluate $i^5+i^{-25}+i^{45}$.
         Step 1: The powers of $i$ follow a cyclical pattern: $i^1 = i$, $i^2 = -1$, $i^3 = -i$, $i^4 = 1$, and then the cycle repeats. 
         We can use this pattern to simplify each term in the expression. 
@@ -96,7 +97,7 @@ class sub_ContextCiter(ContextCiter):
         '''
         prompt1 =  self.prompt_template.format(context=few_shot_context1, query=self.query) 
         prompt2 =  self.prompt_template.format(context=few_shot_context2, query=self.query)  
-        messages = [{"role": "user", "content": prompt2}, {"role": "model", "content": few_shot_answer2}]
+        messages = [{"role": "system", "content": system}, {"role": "user", "content": prompt2}, {"role": "model", "content": few_shot_answer2}]
         # messages.extend([{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}])
         messages.append({"role": "user", "content": final_prompt})
         # print(messages)
@@ -373,8 +374,9 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
 #     r"Please write the final answer with \boxed{} ###\n"
 # )
 # query = 'You are a math problem solver. You are suppose to output the next potential step. Do not output more than 1 steps. You have to output step No.before the step. If the answer can be derived from previous steps? if yes, output \\boxed{final answer}. If not, What is the potential next step based on the previous steps and question?'
-query = r'You are a math problem solver trying to solve the Question demonstrated in the context step by step. If the answer can be derived from previous step, please output the final answer with \boxed{} directly! '#If not, please output the next potential step based on the previous steps and question with Step No.in the front. . Please only output 1 step everytime.'
 
+
+query = r'What is the potential next step or answer?'
 # verifier_prompt_template = (
 #     "You are a math question verifier."
 #     "Question:{Question}\n Context:{Context} \n to be verified step:{verified_step}\n"
