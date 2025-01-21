@@ -400,7 +400,7 @@ with jsonlines.open(input_file) as reader:
                 generated_texts = cc.response.split('\n')[0]#.replace("<|eot_id|>", "###")+"<|eot_id|>"
             except:
                 print("none type")
-            if count_steps(generated_texts)>=3:
+            if count_steps(generated_texts)>=3 or len(generated_texts)<=10:
                 print('regenerating this step.')
                 regenerate +=1
                 if regenerate<=2:
