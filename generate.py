@@ -56,7 +56,7 @@ class sub_ContextCiter(ContextCiter):
         context: str,
         query: str,
         generate_kwargs: Optional[Dict[str, Any]] = None,
-        prompt_template = '',
+        prompt_template = "Context: {context}\n\nQuery: {query}",
         num_ablations = 64,
     ) -> None:
         super().__init__(model, tokenizer, context, query, generate_kwargs = generate_kwargs, prompt_template = prompt_template, num_ablations=num_ablations)
