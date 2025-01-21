@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from transformers import StoppingCriteria, StoppingCriteriaList
 import torch
 from typing import Dict, Any, Optional, List
@@ -32,15 +32,16 @@ model = AutoModelForCausalLM.from_pretrained(model_path,
         #device_map="auto"
         ).to(device)
 
-verifier_tokenizer = AutoTokenizer.from_pretrained(verifier_model_path, padding = False)
-# tokenizer.padding_side = 'right'
-# tokenizer.pad_token = tokenizer.eos_token
 
-verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path, 
-        torch_dtype=torch.bfloat16, 
-        ##low_cpu_mem_usage=True,
-        #device_map="auto"
-        ).to(verifier_device )
+# verifier_tokenizer = AutoTokenizer.from_pretrained(verifier_model_path, padding = False)
+# # tokenizer.padding_side = 'right'
+# # tokenizer.pad_token = tokenizer.eos_token
+
+# verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path, 
+#         torch_dtype=torch.bfloat16, 
+#         ##low_cpu_mem_usage=True,
+#         #device_map="auto"
+#         ).to(verifier_device )
 # verifier_tokenizer = tokenizer
 # verifier_model = model
 
@@ -155,7 +156,7 @@ def extract_reasons(text: str) -> str:
         return '. '.join(result)
     
     return ""
-def verify(model, tokenizer, prompt) -> bool:
+def verify(verifier_pipe, prompt) -> bool:
     """
     生成文本并检查第一个\boxed{}中的答案
     Args:
@@ -167,9 +168,10 @@ def verify(model, tokenizer, prompt) -> bool:
     """
     # 获取生成的文本，去掉prompt部分
     for i in range(3):
-        verifier_cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=verifier_generate_kwargs, prompt_template='{context}', num_ablations=1)
+        # verifier_cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=verifier_generate_kwargs, prompt_template='{context}', num_ablations=1)
         # text = generate(model, tokenizer, prompt)[len(prompt):]
-        text = verifier_cc.response
+        # text = verifier_cc.response
+        text = verifier_generate_text(verifier_pipe, prompt, max_new_tokens)
         print('*'*80)
         print('\n verification results:\n', text)
         print('*'*80)
@@ -275,6 +277,48 @@ verifier_generate_kwargs = {
     'stopping_criteria': stopping_criteria,
 }
 
+verifier_pipe = pipeline(
+    "text-generation",
+    model=verifier_model_path,
+    model_kwargs=verifier_generate_kwargs,
+    device=verifier_device,  
+)
+
+def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
+    messages = [
+        {"role": "system", "content": '''
+        You are a math question verifier.
+        Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.\n
+        Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
+        {"role": "user", "content": '''
+         Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+        Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
+        To be verified step: 
+        factor $x^2+x-6$, which is $(x-3)(x+2)$
+        '''},
+        {"role": "model", "content":'''
+         results:\\boxed{no}
+        \\reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
+         '''
+        },
+        {"role": "user", "content": '''
+        Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+        Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
+        Step 4: the asymptotes for $x^2+x-6$ should be x=2 and x = -3.
+        To be verified step: 
+        So the number of asymptotes should be 2.
+        '''},
+        {"role": "model", "content":'''
+         results:\\boxed{yes}
+        \\reasons: since the asymptotes for $x^2+x-6$ is x=2 and x=-3, the number of asymptotes should be 2.
+         '''
+        },
+        {"role": "user", "content": prompt},
+    ]
+    outputs = verifier_pipe(messages, do_sample=True, top_p=0.95, temperature=0.3, max_new_tokens=max_new_tokens)
+    assistant_response = outputs[0]["generated_text"][-1]["content"].strip()
+    return assistant_response
+
 prompt_template = (
     "You are a math problem solver. Please answer the question step by step. At the begin of each step please signify the step No. in the form 'Step No.:'. "
     "At the end of each step please output '###' to signify the end of the step.For example, in the first step, you should write in the form 'Step 1: ...\n ###'for the first step\n\n"
@@ -293,7 +337,7 @@ verifier_prompt_template = '''
     
     #####
     
-    Coutext: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+    Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
     Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
     To be verified step: 
     factor $x^2+x-6$, which is $(x-3)(x+2)$
@@ -303,7 +347,7 @@ verifier_prompt_template = '''
     
     #####
     
-    Coutext: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+    Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
     Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
     Step 4: the asymptotes for $x^2+x-6$ should be x=2 and x = -3.
     To be verified step: 
@@ -370,8 +414,9 @@ with jsonlines.open(input_file) as reader:
             Context = '\n'.join(filtered_context)
             if refine==0:
                 Context0=Context
-            verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
-            results, reasons = verify(verifier_model, verifier_tokenizer, verify_prompt)
+            # verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
+            verify_prompt = verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
+            results, reasons = verify(verifier_pipe, verify_prompt)
             
             if results == False and refine<=2:
                 if refine==0:
