@@ -10,7 +10,7 @@ from tqdm import tqdm
 from itertools import islice
 
 device='cuda:0'
-verifier_device = 'cuda:1'
+verifier_device = 'cuda:0'
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
@@ -73,6 +73,27 @@ class sub_ContextCiter(ContextCiter):
 
     #     if return_prompt:
     #         return chat_prompt_ids, prompt
+    #     else:
+    #         return chat_prompt_ids
+    
+    # def _get_prompt_ids(
+    #     self,
+    #     mask = None,
+    #     return_prompt: bool = False,
+    # ):
+    #     context = self.partitioner.get_context(mask)
+    #     prompt = self.prompt_template.format(context=context, query=self.query)
+    #     messages = [{"role": "user", "content": prompt}]
+    #     few_shot_context1 = '''
+        
+    #     '''
+    #     chat_prompt = self.tokenizer.apply_chat_template(
+    #         messages, tokenize=False, add_generation_prompt=True
+    #     )
+    #     chat_prompt_ids = self.tokenizer.encode(chat_prompt, add_special_tokens=False)
+
+    #     if return_prompt:
+    #         return chat_prompt_ids, chat_prompt
     #     else:
     #         return chat_prompt_ids
     
@@ -277,12 +298,12 @@ verifier_generate_kwargs = {
     'stopping_criteria': stopping_criteria,
 }
 
-verifier_pipe = pipeline(
-    "text-generation",
-    model=verifier_model_path,
-    model_kwargs={"torch_dtype": torch.bfloat16},
-    device=verifier_device,  
-)
+# verifier_pipe = pipeline(
+#     "text-generation",
+#     model=verifier_model_path,
+#     model_kwargs={"torch_dtype": torch.bfloat16},
+#     device=verifier_device,  
+# )
 
 def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
     messages = [
