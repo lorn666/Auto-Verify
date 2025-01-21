@@ -167,7 +167,7 @@ def verify(model, tokenizer, prompt) -> bool:
     """
     # 获取生成的文本，去掉prompt部分
     for i in range(3):
-        verifier_cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}', num_ablations=1)
+        verifier_cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=verifier_generate_kwargs, prompt_template='{context}', num_ablations=1)
         # text = generate(model, tokenizer, prompt)[len(prompt):]
         text = verifier_cc.response
         print('*'*80)
@@ -261,6 +261,16 @@ generate_kwargs = {
     #'do_sample': True,
     #'top_k': 32,
     #'temperature': 0.3,
+    #'repetition_penalty':1.2,
+    'stopping_criteria': stopping_criteria,
+}
+
+verifier_generate_kwargs = {
+    'max_new_tokens': max_new_tokens,
+    #'num_return_sequences': num_votes,
+    #'do_sample': True,
+    #'top_k': 32,
+    'temperature': 0.3,
     #'repetition_penalty':1.2,
     'stopping_criteria': stopping_criteria,
 }
