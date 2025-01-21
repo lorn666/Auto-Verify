@@ -16,10 +16,10 @@ verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct" #gemma(verifier模型)
 num_votes = 1
-input_file = "./math_testset_annotation.jsonl"
-output_file = "./output_0120-default_config_sumary_0_250.jsonl"
-start_line = 3
-end_line = 250
+input_file = "./MATH_500.jsonl"
+output_file = "./output_0121-default_config_no_refine_full.jsonl"
+start_line = 0
+end_line = 499
 threshold = 1e-7
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
