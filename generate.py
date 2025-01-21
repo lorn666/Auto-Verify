@@ -10,7 +10,7 @@ from tqdm import tqdm
 from itertools import islice
 
 device='cuda:0'
-verifier_device = 'cuda:0'
+verifier_device = 'cuda:1'
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
@@ -32,17 +32,17 @@ model = AutoModelForCausalLM.from_pretrained(model_path,
         #device_map="auto"
         ).to(device)
 
-# verifier_tokenizer = AutoTokenizer.from_pretrained(verifier_model_path, padding = False)
-# # tokenizer.padding_side = 'right'
-# # tokenizer.pad_token = tokenizer.eos_token
+verifier_tokenizer = AutoTokenizer.from_pretrained(verifier_model_path, padding = False)
+# tokenizer.padding_side = 'right'
+# tokenizer.pad_token = tokenizer.eos_token
 
-# verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path, 
-#         torch_dtype=torch.bfloat16, 
-#         ##low_cpu_mem_usage=True,
-#         #device_map="auto"
-#         ).to(verifier_device )
-verifier_tokenizer = tokenizer
-verifier_model = model
+verifier_model = AutoModelForCausalLM.from_pretrained(verifier_model_path, 
+        torch_dtype=torch.bfloat16, 
+        ##low_cpu_mem_usage=True,
+        #device_map="auto"
+        ).to(verifier_device )
+# verifier_tokenizer = tokenizer
+# verifier_model = model
 
 stop_words = ["###"," ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
