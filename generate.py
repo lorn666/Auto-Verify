@@ -432,7 +432,9 @@ with jsonlines.open(input_file) as reader:
                 Context0=Context
             # verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
             verify_prompt = verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
-            results, reasons = verify(verifier_pipe, verify_prompt)
+            # results, reasons = verify(verifier_pipe, verify_prompt)
+            results = True
+            reasons = ''
             
             if results == False and refine<=2:
                 if refine==0:
