@@ -280,7 +280,7 @@ verifier_generate_kwargs = {
 verifier_pipe = pipeline(
     "text-generation",
     model=verifier_model_path,
-    model_kwargs=verifier_generate_kwargs,
+    model_kwargs={"torch_dtype": torch.bfloat16},
     device=verifier_device,  
 )
 
@@ -315,7 +315,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         },
         {"role": "user", "content": prompt},
     ]
-    outputs = verifier_pipe(messages, do_sample=True, top_p=0.95, temperature=0.3, max_new_tokens=max_new_tokens)
+    outputs = verifier_pipe(messages, do_sample=True, top_p=0.95, temperature=0.3, max_new_tokens=verifier_max_new_tokens)
     assistant_response = outputs[0]["generated_text"][-1]["content"].strip()
     return assistant_response
 
