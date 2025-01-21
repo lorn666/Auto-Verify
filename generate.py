@@ -167,7 +167,7 @@ def verify(model, tokenizer, prompt) -> bool:
     """
     # 获取生成的文本，去掉prompt部分
     for i in range(3):
-        verifier_cc = sub_ContextCiter(model, tokenizer, prompt+"<|eot_id|>", '', generate_kwargs=generate_kwargs, prompt_template='{context}', num_ablations=1)
+        verifier_cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}', num_ablations=1)
         # text = generate(model, tokenizer, prompt)[len(prompt):]
         text = verifier_cc.response
         print('*'*80)
@@ -343,7 +343,7 @@ with jsonlines.open(input_file) as reader:
             print('*'*80)
             cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
             try:
-                generated_texts = cc.response.replace("<|eot_id|>", "###")+"<|eot_id|>"
+                generated_texts = cc.response#.replace("<|eot_id|>", "###")+"<|eot_id|>"
             except:
                 print("none type")
             if count_steps(generated_texts)>=3:
