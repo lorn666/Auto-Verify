@@ -18,7 +18,7 @@ verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
 input_file = "./math_testset_annotation.jsonl"
 output_file = "./output_0120-default_config_sumary_0_250.jsonl"
-start_line = 1
+start_line = 2
 end_line = 250
 threshold = 1e-7
 
