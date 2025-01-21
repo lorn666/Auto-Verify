@@ -18,7 +18,7 @@ verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct" #gemma(verifier模型)
 num_votes = 1
 input_file = "./MATH_500.jsonl"
 output_file = "./output_0121-default_config_no_refine_full.jsonl"
-start_line = 0
+start_line = 30
 end_line = 499
 threshold = 1e-7
 
@@ -449,7 +449,7 @@ with jsonlines.open(input_file) as reader:
             print('*'*80)
             print('\nprompt:\n', prompt, '\n')
             print('*'*80)
-            cc = sub_ContextCiter(model, tokenizer, prompt, query, generate_kwargs=generate_kwargs, )
+            cc = sub_ContextCiter(model, tokenizer, prompt, query, generate_kwargs=generate_kwargs, num_ablations=1)
             try:
                 generated_texts = cc.response
             except:
