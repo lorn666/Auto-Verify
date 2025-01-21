@@ -338,7 +338,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
 #     "At the end of each step please output '###' to signify the end of the step.For example, in the first step, you should write in the form 'Step 1: ...\n ###'for the first step\n\n"
 #     r"Please write the final answer with \boxed{} ###\n"
 # )
-query = 'You are a math problem solver. You are suppose to output the next potential step. Do not output more than 1 steps. You have to output step No. before the step.'
+query = 'You are a math problem solver. You are suppose to output the next potential step. Do not output more than 1 steps. You have to output step No. before the step. What is the potential next step based on the previous steps and question?'
 
 # verifier_prompt_template = (
 #     "You are a math question verifier."
