@@ -9,17 +9,17 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device='cuda:0'
-verifier_device = 'cuda:1'
+device='cuda:2'
+verifier_device = 'cuda:2'
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct"
 num_votes = 1
-input_file = "./math_testset_annotation.jsonl"
-output_file = "./output_0120-default_config_sumary_0_250.jsonl"
-start_line = 3
-end_line = 250
+input_file = "./MATH_500.jsonl"
+output_file = "./output_0120_no_refine_sumary_0_5000.jsonl"
+start_line = 0
+end_line = 499
 threshold = 1e-7
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
@@ -61,20 +61,20 @@ class sub_ContextCiter(ContextCiter):
     ) -> None:
         super().__init__(model, tokenizer, context, query, generate_kwargs = generate_kwargs, prompt_template = prompt_template, num_ablations=num_ablations)
     
-    # def _get_prompt_ids(
-    #     self,
-    #     mask = None,
-    #     return_prompt: bool = False,
-    # ):
-    #     context = self.partitioner.get_context(mask)
-    #     prompt = self.prompt_template.format(context=context, query=self.query)
+    def _get_prompt_ids(
+        self,
+        mask = None,
+        return_prompt: bool = False,
+    ):
+        context = self.partitioner.get_context(mask)
+        prompt = self.prompt_template.format(context=context, query=self.query)
     
-    #     chat_prompt_ids = self.tokenizer.encode(prompt, add_special_tokens=False)
+        chat_prompt_ids = self.tokenizer.encode(prompt, add_special_tokens=False)
 
-    #     if return_prompt:
-    #         return chat_prompt_ids, prompt
-    #     else:
-    #         return chat_prompt_ids
+        if return_prompt:
+            return chat_prompt_ids, prompt
+        else:
+            return chat_prompt_ids
     
 class StoppingCriteriaSub(StoppingCriteria):
     def __init__(self, stops=None):
@@ -264,7 +264,7 @@ generate_kwargs = {
     #'top_k': 32,
     #'temperature': 0.3,
     #'repetition_penalty':1.2,
-    #'stopping_criteria': stopping_criteria,
+    'stopping_criteria': stopping_criteria,
 }
 
 verifier_generate_kwargs = {
@@ -277,12 +277,13 @@ verifier_generate_kwargs = {
     'stopping_criteria': stopping_criteria,
 }
 
-verifier_pipe = pipeline(
-    "text-generation",
-    model=verifier_model_path,
-    model_kwargs={"torch_dtype": torch.bfloat16},
-    device=verifier_device,  
-)
+# verifier_pipe = pipeline(
+#     "text-generation",
+#     model=verifier_model_path,
+#     model_kwargs={"torch_dtype": torch.bfloat16},
+#     device=verifier_device,  
+# )
+verifier_pipe = None
 
 def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
     messages = [
@@ -333,12 +334,11 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
     assistant_response = outputs[0]["generated_text"][-1]["content"].strip()
     return assistant_response
 
-# prompt_template = (
-#     "You are a math problem solver. Please answer the question step by step. At the begin of each step please signify the step No. in the form 'Step No.:'. "
-#     "At the end of each step please output '###' to signify the end of the step.For example, in the first step, you should write in the form 'Step 1: ...\n ###'for the first step\n\n"
-#     r"Please write the final answer with \boxed{} ###\n"
-# )
-query = 'You are a math problem solver. You are suppose to output the next potential step. Do not output more than 1 steps. You have to output step No. before the step.'
+prompt_template = (
+    "You are a math problem solver. Please answer the question step by step. At the begin of each step please signify the step No. in the form 'Step No.:'. "
+    "At the end of each step please output '###' to signify the end of the step.For example, in the first step, you should write in the form 'Step 1: ...\n ###'for the first step\n\n"
+    r"Please write the final answer with \boxed{} ###\n"
+)
 
 # verifier_prompt_template = (
 #     "You are a math question verifier."
@@ -401,8 +401,7 @@ regenerate_prompt_template = (
 with jsonlines.open(input_file) as reader:
     for item in tqdm(islice(reader, start_line, end_line)):
         Question = item['question']
-        # prompt = prompt_template+"Question:{}\n".format(Question)
-        prompt = "Question:{}\n".format(Question)
+        prompt = prompt_template+"Question:{}\n".format(Question)
         prompt_len = len(prompt)
         i=0
         regenerate = 0
@@ -411,7 +410,7 @@ with jsonlines.open(input_file) as reader:
             print('*'*80)
             print('\nprompt:\n', prompt, '\n')
             print('*'*80)
-            cc = sub_ContextCiter(model, tokenizer, prompt, query, generate_kwargs=generate_kwargs, )
+            cc = sub_ContextCiter(model, tokenizer, prompt, '', generate_kwargs=generate_kwargs, prompt_template='{context}')
             try:
                 generated_texts = cc.response.split('\n')[0]#.replace("<|eot_id|>", "###")+"<|eot_id|>"
             except:
@@ -426,18 +425,21 @@ with jsonlines.open(input_file) as reader:
             raw_results = cc.get_attributions()
             indices = np.where(raw_results > threshold)[0]
             extract_context = [cc.sources[int(i)] for i in indices]
-            filtered_context = [context for context in extract_context if context not in prompt]
+            filtered_context = [context for context in extract_context if context not in prompt_template]
             Context = '\n'.join(filtered_context)
             if refine==0:
                 Context0=Context
             # verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
             verify_prompt = verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
-            results, reasons = verify(verifier_pipe, verify_prompt)
+            # results, reasons = verify(verifier_pipe, verify_prompt)
+            results = True
+            reasons = ''
+            
             
             if results == False and refine<=2:
                 if refine==0:
                     prompt0 = prompt
-                    step_prompt = prompt
+                    step_prompt = remove_prefix(prompt, prompt_template)
                     print('*'*80)
                     print('step_prompt:',step_prompt)
                     print('*'*80)
