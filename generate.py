@@ -373,7 +373,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
 #     r"Please write the final answer with \boxed{} ###\n"
 # )
 # query = 'You are a math problem solver. You are suppose to output the next potential step. Do not output more than 1 steps. You have to output step No.before the step. If the answer can be derived from previous steps? if yes, output \\boxed{final answer}. If not, What is the potential next step based on the previous steps and question?'
-query = r'You are a math problem solver tring to solve the Question demonstrated in the context. If the answer can be derived from previous step, please output the final answer with \boxed{} directly! If not, please output the next potential step based on the previous steps and question with Step No.in the front. . Please only output 1 step everytime.'
+query = r'You are a math problem solver trying to solve the Question demonstrated in the context step by step. If the answer can be derived from previous step, please output the final answer with \boxed{} directly! If not, please output the next potential step based on the previous steps and question with Step No.in the front. . Please only output 1 step everytime.'
 
 # verifier_prompt_template = (
 #     "You are a math question verifier."
