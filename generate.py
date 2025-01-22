@@ -10,17 +10,17 @@ from tqdm import tqdm
 from itertools import islice
 
 device='cuda:0'
-verifier_device = 'cuda:0'
+verifier_device = 'cuda:1'
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct" #gemma(verifier模型)
 num_votes = 1
 input_file = "./MATH_500.jsonl"
-output_file = "./output_0121-default_config_no_refine_full.jsonl"
-start_line = 30
-end_line = 499
-threshold = 1e-7
+output_file = "./output_0121-default_config_no_summary_with_refine_full.jsonl"
+start_line = 0
+end_line = 250
+threshold = -1e7
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
 # tokenizer.padding_side = 'right'
@@ -312,12 +312,12 @@ verifier_generate_kwargs = {
     'stopping_criteria': stopping_criteria,
 }
 
-# verifier_pipe = pipeline(
-#     "text-generation",
-#     model=verifier_model_path,
-#     model_kwargs={"torch_dtype": torch.bfloat16},
-#     device=verifier_device,  
-# )
+verifier_pipe = pipeline(
+    "text-generation",
+    model=verifier_model_path,
+    model_kwargs={"torch_dtype": torch.bfloat16},
+    device=verifier_device,  
+)
 
 def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
     messages = [
@@ -470,9 +470,9 @@ with jsonlines.open(input_file) as reader:
                 Context0=Context
             # verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
             verify_prompt = verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
-            # results, reasons = verify(verifier_pipe, verify_prompt)
-            results = True
-            reasons = ''
+            results, reasons = verify(verifier_pipe, verify_prompt)
+            # results = True
+            # reasons = ''
             
             if results == False and refine<=2:
                 if refine==0:
