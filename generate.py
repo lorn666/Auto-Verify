@@ -325,8 +325,8 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         {"role": "system", "content": '''
         You are a math question verifier.
         Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.
+        Output \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
         If the 'to be verified step' contains duplicate content, Please answer \\boxed{no}
-        Answer \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
         Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
         {"role": "user", "content": '''
          Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
