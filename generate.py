@@ -22,6 +22,7 @@ output_file = "./output_0121-default_config_no_summary_with_refine_full.jsonl"
 start_line = 0
 end_line = 250
 threshold = -1e7
+num_ablations = 1
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding = False)
 # tokenizer.padding_side = 'right'
@@ -111,7 +112,74 @@ class sub_ContextCiter(ContextCiter):
             return chat_prompt_ids, chat_prompt
         else:
             return chat_prompt_ids
+
+class sub_refine_ContextCiter(ContextCiter):
+    def __init__(
+        self,
+        model: Any,
+        tokenizer: Any,
+        context: str,
+        query: str,
+        generate_kwargs: Optional[Dict[str, Any]] = None,
+        prompt_template = "Context: {context}\n\nInstruction: {query}",
+        num_ablations = 64,
+    ) -> None:
+        super().__init__(model, tokenizer, context, query, generate_kwargs = generate_kwargs, prompt_template = prompt_template, num_ablations=num_ablations)
     
+    # def _get_prompt_ids(
+    #     self,
+    #     mask = None,
+    #     return_prompt: bool = False,
+    # ):
+    #     context = self.partitioner.get_context(mask)
+    #     prompt = self.prompt_template.format(context=context, query=self.query)
+    
+    #     chat_prompt_ids = self.tokenizer.encode(prompt, add_special_tokens=False)
+
+    #     if return_prompt:
+    #         return chat_prompt_ids, prompt
+    #     else:
+    #         return chat_prompt_ids
+    
+    def _get_prompt_ids(
+        self,
+        mask = None,
+        return_prompt: bool = False,
+    ):
+        context = self.partitioner.get_context(mask)
+        final_prompt = self.prompt_template.format(context=context, query=self.query)
+        system = r'You are a math problem solver. Since the last step is incorrect, now you have to regenerate the last step based on the previous step, question and instruction. The instruction explains why the last step is incorrect. '
+        few_shot_context1 = r'''Question: Evaluate $i^5+i^{-25}+i^{45}$.
+        Step 1: The powers of $i$ follow a cyclical pattern: $i^1 = i$, $i^2 = -1$, $i^3 = -i$, $i^4 = 1$, and then the cycle repeats. 
+        We can use this pattern to simplify each term in the expression. 
+        '''
+       
+
+
+        few_shot_answer1 = r'Step 2: For $i^5$, we can rewrite it as $i^4 \cdot i$, which simplifies to $1 \cdot i = i$. For $i^{-25}$, we can rewrite it as $\frac{1}{i^{25}}$. Since $i^{25}$ is equivalent to $(i^4)^6 \cdot i$, and $i^4 = 1$, we have $i^{25} = 1^6 \cdot i = i$.'
+        few_shot_context2 = r'''Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
+        Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
+        Step 2: to find the zero point, we have to factor the $x^2+x-6$.
+        To be regenerated step: Step 3:factor $x^2+x-6$, which is $(x-3)(x+2)$
+        Instruction: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$'''
+        few_shot_answer2 = r'''steps 3:factor $x^2+x-6$, which is $(x+3)(x-2)$
+        '''
+        prompt1 =  self.prompt_template.format(context=few_shot_context1, query=self.query) 
+        prompt2 =  self.prompt_template.format(context=few_shot_context2, query=self.query)  
+        messages = [{"role": "system", "content": system}, {"role": "user", "content": prompt2}, {"role": "model", "content": few_shot_answer2}]
+        # messages.extend([{"role": "user", "content": prompt2}, {"role": "assistant", "content": few_shot_answer2}])
+        messages.append({"role": "user", "content": final_prompt})
+        # print(messages)
+        chat_prompt = self.tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True
+        )
+        chat_prompt_ids = self.tokenizer.encode(chat_prompt, add_special_tokens=False)
+
+        if return_prompt:
+            return chat_prompt_ids, chat_prompt
+        else:
+            return chat_prompt_ids
+
 class StoppingCriteriaSub(StoppingCriteria):
     def __init__(self, stops=None):
         super().__init__()
@@ -380,6 +448,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
 
 
 query = r'What is the potential next step or answer?'
+query_refine = r'What is the regenerated step?'
 # verifier_prompt_template = (
 #     "You are a math question verifier."
 #     "Question:{Question}\n Context:{Context} \n to be verified step:{verified_step}\n"
@@ -452,7 +521,10 @@ with jsonlines.open(input_file) as reader:
             print('*'*80)
             print('\nprompt:\n', prompt, '\n')
             print('*'*80)
-            cc = sub_ContextCiter(model, tokenizer, prompt, query, generate_kwargs=generate_kwargs, num_ablations=1)
+            if refine==0:
+                cc = sub_ContextCiter(model, tokenizer, prompt, query, generate_kwargs=generate_kwargs, num_ablations=num_ablations)
+            if refine>0:
+                cc = sub_refine_ContextCiter(model, tokenizer, prompt, query_refine, generate_kwargs=generate_kwargs, num_ablations=num_ablations)
             try:
                 generated_texts = cc.response
             except:
@@ -486,7 +558,7 @@ with jsonlines.open(input_file) as reader:
                     print('*'*80)
                     print('self-refine-generated_text:',generated_texts)
                     print('*'*80)
-                    prompt = self_refine_template + self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instruction = reasons)
+                    prompt = self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instruction = reasons)
                     refine+=1
                     print('\nself-refining\n')
                     continue
@@ -496,7 +568,7 @@ with jsonlines.open(input_file) as reader:
                     print('*'*80)
                     print('self-refine-generated_text:',generated_texts)
                     print('*'*80)
-                    prompt = self_refine_template + self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instruction = reasons)
+                    prompt = self_refine_template2.format(steps=step_prompt, target_step = generated_texts, instruction = reasons)
                     refine+=1
                     print('\nself-refining\n')
                     continue 
