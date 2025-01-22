@@ -393,6 +393,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         {"role": "system", "content": '''
         You are a math question verifier.
         Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step has calculation error or logical inconsistency based on the context.
+        If one step is previous mentioned, it's a minor mistake, so just output \\boxed{yes}.
         Output \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
         If the 'to be verified step' contains repetitive content, Please answer \\boxed{no}
         Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
@@ -416,7 +417,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         '''},
         {"role": "model", "content":'''
          results:\\boxed{no}
-        \\reasons: $x^2+x-6$ doesn't equals to $(x-3)(x+2)$ but $(x-2)(x+3)$.
+        \\reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
         '''
         # \\reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
          
