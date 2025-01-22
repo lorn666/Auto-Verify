@@ -448,7 +448,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
 
 
 query = r'What is the potential next step or answer?'
-query_refine = r'What is the regenerated step?'
+query_refine = r'What is the regenerated step?(output directly)'
 # verifier_prompt_template = (
 #     "You are a math question verifier."
 #     "Question:{Question}\n Context:{Context} \n to be verified step:{verified_step}\n"
