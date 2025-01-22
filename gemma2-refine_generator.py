@@ -407,7 +407,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
     assistant_response = outputs[0]["generated_text"][-1]["content"].strip()
     return assistant_response
 
-query = r"Print next step. One Step only. If answer is determined, just output the final answer in \boxed{}! "
+query = r"What is the potential next step or answer? If the answer can be derived, output them with \boxed{} directly."
 query_refine = r"What is the regenerated step?(output directly)"
 
 verifier_prompt_template = """
