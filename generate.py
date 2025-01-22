@@ -16,8 +16,8 @@ verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "meta-llama/Llama-3.1-8B-Instruct" #gemma(verifier模型)
 num_votes = 1
-input_file = "./MATH_500.jsonl"
-# input_file = "./math_testset_annotation.jsonl"
+# input_file = "./MATH_500.jsonl"
+input_file = "./math_testset_annotation.jsonl"
 output_file = "./output_0121-default_config_no_summary_with_refine_full.jsonl"
 start_line = 0
 end_line = 250
@@ -326,7 +326,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         You are a math question verifier.
         Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.
         If the 'to be verified step' contains duplicate content, Please answer \\boxed{no}
-        If it's not a fatal error, please do not answer \\boxed{no}. Answer \\boxed{yes} as much as possible, since we could accept minor mistake.
+        Answer \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
         Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
         {"role": "user", "content": '''
          Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
