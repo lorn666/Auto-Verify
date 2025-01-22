@@ -148,7 +148,7 @@ class sub_refine_ContextCiter(ContextCiter):
     ):
         context = self.partitioner.get_context(mask)
         final_prompt = self.prompt_template.format(context=context, query=self.query)
-        system = r'You are a math problem solver. Since the last step is incorrect, now you have to regenerate the last step based on the previous step, question and instruction. The instruction explains why the last step is incorrect. '
+        system = r'You are a math problem solver. Since the last step is incorrect, now you have to regenerate the last step, which is the to be regenerated step below, based on the previous step, question and instruction. The instruction explains why the last step is incorrect. '
         few_shot_context1 = r'''Question: Evaluate $i^5+i^{-25}+i^{45}$.
         Step 1: The powers of $i$ follow a cyclical pattern: $i^1 = i$, $i^2 = -1$, $i^3 = -i$, $i^4 = 1$, and then the cycle repeats. 
         We can use this pattern to simplify each term in the expression. 
