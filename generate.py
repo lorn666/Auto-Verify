@@ -338,7 +338,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         You are a math question verifier.
         Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.
         Output \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
-        If the 'to be verified step' contains duplicate content, Please answer \\boxed{no}
+        If the 'to be verified step' contains repetitive content, Please answer \\boxed{no}
         Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
         {"role": "user", "content": '''
          Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
@@ -347,7 +347,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         factor $x^2+x-6$, which is $(x+3)(x-2)$
         '''},
         {"role": "model", "content":'''
-         results:\\boxed{no}
+         results:\\boxed{yes}
         \\reasons: $x^2+x-6$ equals to $(x-3)(x+2)$ but $(x-2)(x+3)$.
         '''
         # \\reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
@@ -362,7 +362,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         '''},
         {"role": "model", "content":'''
          results:\\boxed{No}
-        \\reasons: The to be verifier step contains duplicate content. Please remove duplicate content.
+        \\reasons: The to be verifier step contains repetitive content. Please remove duplicate content.
          '''
         },
         {"role": "user", "content": prompt},
