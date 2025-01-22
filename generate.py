@@ -322,6 +322,12 @@ verifier_pipe = pipeline(
 
 def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
     messages = [
+        {"role": "system", "content": '''
+        You are a math question verifier.
+        Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.
+        Output \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
+        If the 'to be verified step' contains repetitive content, Please answer \\boxed{no}
+        Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
         {"role": "user", "content": '''
         Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
         Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
@@ -334,12 +340,6 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         \\reasons: since the asymptotes for $x^2+x-6$ is x=2 and x=-3, the number of asymptotes should be 2.
          '''
         },
-        {"role": "system", "content": '''
-        You are a math question verifier.
-        Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step can be derived from the Context without hallucination or error.
-        Output \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
-        If the 'to be verified step' contains repetitive content, Please answer \\boxed{no}
-        Your response should be in the form of: results:\\boxed{no/yes} \n reasons:'''},
         {"role": "user", "content": '''
          Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
         Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
