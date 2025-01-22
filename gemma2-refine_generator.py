@@ -18,11 +18,11 @@ verifier_model_path = "google/gemma-2-9b-it"  # gemma(verifier模型)
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
 input_file = "./MATH_500.jsonl"
-output_file = "./output_0122_self-refine_with_summary.jsonl"
+output_file = "./output_0122_self-refine_with_summary_32.jsonl"
 start_line = 2
 end_line = 250
 threshold = 1e-7
-num_ablations = 1
+num_ablations = 32
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
