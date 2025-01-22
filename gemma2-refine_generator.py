@@ -18,7 +18,7 @@ verifier_model_path = "google/gemma-2-9b-it"  # gemma(verifier模型)
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
 input_file = "./MATH_500.jsonl"
-output_file = "./cxr_self-refine_test.out"
+output_file = "./output_0122_self-refine_no_summary.jsonl"
 start_line = 2
 end_line = 250
 threshold = -1e7
@@ -340,9 +340,8 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         You are a math question verifier.
         Please answer '\\boxed{yes}' or '\\boxed{no}' and the reasons to verify whether the to be verified step has calculation error or logical inconsistency based on the context.
         If one step is previous mentioned, it's a minor mistake, so just output \\boxed{yes}.
-
-        If the 'to be verified step' contains repetitive content, Please answer \\boxed{no}
-        Your response should be in the form of: results:\\boxed{no/yes} \n reasons:""",
+        If the 'to be verified step' contains repetitive content, Please answer \\boxed{no}.
+        Your response should be in the form of: results:\\boxed{no/yes} \n reasons:"""
         },        #Output \\boxed{yes} as much as possible, since we could accept minor mistake.If it's not a fatal error, please answer \\boxed{yes}.
          {
             "role": "assistant",
