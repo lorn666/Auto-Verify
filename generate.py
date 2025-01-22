@@ -412,11 +412,11 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
          Context: Question: How many vertical asymptotes does the graph of $y=\\frac{2}{x^2+x-6}$ have?
         Step 1: to determine the asymptotes, we should find the zero point of $y=\\frac{2}{x^2+x-6}$.
         To be verified step: 
-        factor $x^2+x-6$, which is $(x+3)(x-2)$
+        factor $x^2+x-6$, which is $(x-3)(x+2)$
         '''},
         {"role": "model", "content":'''
-         results:\\boxed{yes}
-        \\reasons: $x^2+x-6$ equals to $(x-3)(x+2)$ but $(x-2)(x+3)$.
+         results:\\boxed{no}
+        \\reasons: $x^2+x-6$ doesn't equals to $(x-3)(x+2)$ but $(x-2)(x+3)$.
         '''
         # \\reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
          
