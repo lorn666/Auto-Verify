@@ -57,3 +57,10 @@
 {"question": "The sum of the first $N$ positive odd numbers is 121. What is the value of $N$?", "answer": "11"}
 {"question": "Riproarin' Ringo was roping a recalcitrant dogie. Ringo decided to give the dogie a reprieve by calculating \\[|(1-i)^8|\\]before riding after the dogie. What answer should Ringo have found?", "answer": "16"}
 {"question": "Compute $99^2+99+1$ in your head.", "answer": "9801"}
+{"question": "Evaluate $i^5+i^{-25}+i^{45}$.", "answer": ""}
+{"question": "Evaluate $i^5+i^{-25}+i^{45}$.", "answer": "-i"}
+{"question": "If $2^8=4^x$, what is the value of $x$?", "answer": "4"}
+{"question": "Evaluate $i^5+i^{-25}+i^{45}$.", "answer": "3i"}
+{"question": "Evaluate $i^5+i^{-25}+i^{45}$.", "answer": "3i"}
+{"question": "Evaluate $i^5+i^{-25}+i^{45}$.", "answer": "i"}
+{"question": "If $2^8=4^x$, what is the value of $x$?", "answer": ""}
