@@ -13,12 +13,12 @@ device = "cuda:7"
 verifier_device = "cuda:7"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
-model_path = "Qwen/Qwen2.5-14B-Instruct"
+model_path = "meta-llama/Meta-Llama-3.1-70B-Instruct"
 verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"  # "google/gemma-2-9b-it"
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
 input_file = "../MATH_500.jsonl"
-output_file = "../output_0123_self-refine_qwen_ours_with_summary_32.jsonl"
+output_file = "../output_0123_self-refine_llama70b_ours_with_summary_32.jsonl"
 start_line = 0
 end_line = 150
 threshold = 1e-7
@@ -26,7 +26,7 @@ num_ablations = 32
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
-model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16).to(device)
+model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16, device_map="auto")#.to(device)
 
 stop_words = ["###", " ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
