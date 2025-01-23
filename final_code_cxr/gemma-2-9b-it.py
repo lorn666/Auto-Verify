@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:5"
-verifier_device = "cuda:5"
+device = "cuda:0"
+verifier_device = "cuda:0"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 # model_path = "deepseek-ai/deepseek-llm-7b-base"
@@ -19,7 +19,7 @@ verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/resul
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
 input_file = "../MATH_500.jsonl"
-output_file = "../output_0122_self-refine_deepseek_ours_no_summary_.jsonl"
+output_file = "../output_0123_self-refine_gemma_ours_no_summary_.jsonl"
 start_line = 0
 end_line = 150
 threshold = -1e7
