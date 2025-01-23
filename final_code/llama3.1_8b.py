@@ -363,7 +363,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         {
             "role": "assistant",
             "content": """**Explanation:**since the asymptotes for $x^2+x-6$ is x=2 and x=-3, the number of asymptotes should be 2. 
-            So, the result is \\boxed{Yes}.""",
+            \\boxed{Yes}.""",
         },
         {
             "role": "user",
@@ -380,7 +380,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         {
             "role": "assistant",
             "content": """**Explanation:** $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$. 
-            So, the result is \\boxed{No}.""",
+            \\boxed{No}.""",
             # \\reasons: $x^2+x-6$ doesn't equal to $(x-3)(x+2)$ but $(x-2)(x+3)$.
         },
         {
@@ -399,7 +399,7 @@ def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
         {
             "role": "assistant",
             "content": """**Explanation:**The to be verifier step contains repetitive content. Please remove duplicate content.
-            So, the result is \\boxed{No}.
+            \\boxed{No}.
          """,
         },
         {"role": "user", "content": prompt},
