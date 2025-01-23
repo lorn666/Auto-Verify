@@ -328,7 +328,7 @@ verifier_generate_kwargs = {
 verifier_pipe = pipeline(
     "text-generation",
     model=verifier_model_path,
-    # model_kwargs={"torch_dtype": torch.bfloat16},
+    model_kwargs={"torch_dtype": torch.bfloat16},
     device=verifier_device,
 )
 
