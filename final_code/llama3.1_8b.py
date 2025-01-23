@@ -9,20 +9,20 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:2"
-verifier_device = "cuda:1"
+device = "cuda:3"
+verifier_device = "cuda:3"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
-verifier_model_path = "google/gemma-2-9b-it"  # gemma(verifier模型)
+verifier_model_path = "~/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"  # gemma(verifier模型)
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
-input_file = "./MATH_500.jsonl"
-output_file = "./output_0122_self-refine_with_summary_64.jsonl"
+input_file = "../MATH_500.jsonl"
+output_file = "../output_0122_self-refine_ours_with_summary_32.jsonl"
 start_line = 0
-end_line = 250
+end_line = 150
 threshold = 1e-7
-num_ablations = 64
+num_ablations = 32
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
