@@ -9,16 +9,16 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:0"
-verifier_device = "cuda:0"
+device = "cuda:7"
+verifier_device = "cuda:7"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "Qwen/Qwen2.5-14B-Instruct"
-verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"  # gemma(verifier模型)
+verifier_model_path = "google/gemma-2-9b-it"#"/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"  # gemma(verifier模型)
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
 input_file = "../MATH_500.jsonl"
-output_file = "../output_0122_self-refine_qwen_ours_no_summary_.jsonl"
+output_file = "../output_0122_self-refine_qwen_gemma_with_summary_32.jsonl"
 start_line = 0
 end_line = 150
 threshold = 1e-7
