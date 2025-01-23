@@ -18,11 +18,11 @@ verifier_model_path = "google/gemma-2-9b-it"#"/mnt/d2/wyin/Hera/LLM-for-Math/Dir
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
 input_file = "../MATH_500.jsonl"
-output_file = "../output_0122_self-refine_qwen_gemma_with_summary_32.jsonl"
+output_file = "../output_0122_self-refine_qwen_gemma_no_summary.jsonl"
 start_line = 0
 end_line = 150
-threshold = 1e-7
-num_ablations = 32
+threshold = -1e7
+num_ablations = 1
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
