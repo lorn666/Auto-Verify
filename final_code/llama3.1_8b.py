@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:3"
-verifier_device = "cuda:3"
+device = "cuda:4"
+verifier_device = "cuda:4"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
@@ -18,11 +18,11 @@ verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/resul
 num_votes = 1
 # input_file = "./MATH_500.jsonl"
 input_file = "../MATH_500.jsonl"
-output_file = "../output_0122_self-refine_ours_with_summary_32.jsonl"
+output_file = "../output_0122_self-refine_ours_no_summary_.jsonl"
 start_line = 0
 end_line = 150
-threshold = 1e-7
-num_ablations = 32
+threshold = -1e7
+num_ablations = 1
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
