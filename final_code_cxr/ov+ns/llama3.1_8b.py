@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:4"
-verifier_device = "cuda:4"
+device = "cuda:0"
+verifier_device = "cuda:1"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
@@ -242,10 +242,10 @@ def verify(verifier_pipe, prompt) -> bool:
         if match:
             answer = match.group(1).strip().lower()
             # 返回True如果是yes，False如果是no
-            if ("No" not in answer) and ("Yes" not in answer):
+            if ("no" not in answer) and ("yes" not in answer):
                 continue
             # 如果没有找到匹配（但有\boxed），返回True
-            return "No" not in answer, reasons
+            return "no" not in answer, reasons
     return True, reasons
 
 
