@@ -26,7 +26,7 @@ num_ablations = 1
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
-model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16, trust_remote_code=True).to(device)
+model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16).to(device)
 
 stop_words = ["###", " ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
