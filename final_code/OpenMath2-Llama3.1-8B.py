@@ -242,6 +242,9 @@ def verify(verifier_pipe, prompt) -> bool:
         match = re.search(pattern, text)
         if match:
             answer = match.group(1).strip().lower()
+            print("*" * 80)
+            print("\n Answer is :\n", answer)
+            print("*" * 80)
             # 返回True如果是yes，False如果是no
             if ("No" not in answer) and ("Yes" not in answer):
                 continue
