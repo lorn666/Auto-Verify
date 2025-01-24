@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:0"
-verifier_device = "cuda:7"
+device = "cuda:1"
+verifier_device = "cuda:1"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "google/gemma-2-9b-it"

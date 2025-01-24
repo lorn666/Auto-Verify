@@ -10,7 +10,7 @@ from tqdm import tqdm
 from itertools import islice
 
 device = "cuda:0"
-verifier_device = "cuda:7"
+verifier_device = "cuda:0"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 # model_path = "deepseek-ai/deepseek-llm-7b-base"
