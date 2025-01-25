@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:0"
-verifier_device = "cuda:1"
+device = "cuda:2"
+verifier_device = "cuda:3"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Meta-Llama-3-8B-Instruct"
@@ -20,8 +20,8 @@ input_file = "../MATH_500.jsonl"
 output_file = "./res_llama3.1.jsonl"
 start_line = 0
 end_line = 150
-threshold = -10000
-num_ablations = 1
+threshold = 1e-7
+num_ablations = 32
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 

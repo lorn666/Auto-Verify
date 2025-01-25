@@ -10,11 +10,11 @@ from tqdm import tqdm
 from itertools import islice
 
 device = "cuda:0"
-verifier_device = "cuda:1"
+verifier_device = "cuda:0"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Meta-Llama-3-8B-Instruct"
-verifier_model_path = "google/gemma-2-9b-it"
+verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"  # gemma(verifier模型)
 num_votes = 1
 input_file = "../MATH_500.jsonl"
 output_file = "./res_llama3.1.jsonl"
