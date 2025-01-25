@@ -9,7 +9,7 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:5"
+device = "cuda:0"
 verifier_device = "cuda:5"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
@@ -17,10 +17,10 @@ verifier_max_new_tokens = 256
 model_path = "google/gemma-2-9b-it"
 verifier_model_path = "google/gemma-2-9b-it"  # THIS IS USELESS! OCCUPATION ONLY!
 num_votes = 1
-input_file = "../MATH_500.jsonl"
-output_file = "./res_gemma2_raw.jsonl"
+input_file = "../gsm8k_test.jsonl"
+output_file = "./res_gemma2_gsm8k_raw.jsonl"
 start_line = 0
-end_line = 150
+end_line = 300
 threshold = 1e-7
 num_ablations = 1
 
