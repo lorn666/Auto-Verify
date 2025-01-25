@@ -9,19 +9,19 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:1"
-verifier_device = "cuda:1"
+device = "cuda:4"
+verifier_device = "cuda:4"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Meta-Llama-3-8B-Instruct"
-verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"  # gemma(verifier模型)
+verifier_model_path = "google/gemma-2-9b-it"  # THIS IS USELESS! OCCUPATION ONLY!
 num_votes = 1
 input_file = "../MATH_500.jsonl"
-output_file = "./llama3.jsonl"
+output_file = "./res_llama3_raw.jsonl"
 start_line = 0
 end_line = 150
 threshold = 1e-7
-num_ablations = 32
+num_ablations = 1
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
@@ -242,10 +242,10 @@ def verify(verifier_pipe, prompt) -> bool:
         if match:
             answer = match.group(1).strip().lower()
             # 返回True如果是yes，False如果是no
-            if ("no" not in answer) and ("yes" not in answer):
+            if ("No" not in answer) and ("Yes" not in answer):
                 continue
             # 如果没有找到匹配（但有\boxed），返回True
-            return "no" not in answer, reasons
+            return "No" not in answer, reasons
     return True, reasons
 
 
@@ -323,12 +323,12 @@ verifier_generate_kwargs = {
     "stopping_criteria": stopping_criteria,
 }
 
-verifier_pipe = pipeline(
-    "text-generation",
-    model=verifier_model_path,
-    model_kwargs={"torch_dtype": torch.bfloat16},
-    device=verifier_device,
-)
+# verifier_pipe = pipeline(
+#    "text-generation",
+#    model=verifier_model_path,
+#    model_kwargs={"torch_dtype": torch.bfloat16},
+#    device=verifier_device,
+#)
 
 
 def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
@@ -507,12 +507,12 @@ with jsonlines.open(input_file) as reader:
             if refine == 0:
                 Context0 = Context
             # verify_prompt = verifier_prompt_template + verifier_prompt_template2.format(Question = Question, Context = Context0, verified_step = generated_texts)
-            verify_prompt = verifier_prompt_template2.format(
-                Question=Question, Context=Context0, verified_step=generated_texts
-            )
-            results, reasons = verify(verifier_pipe, verify_prompt)
-            # results = True
-            # reasons = ''
+            # verify_prompt = verifier_prompt_template2.format(
+            #    Question=Question, Context=Context0, verified_step=generated_texts
+            #)
+            #results, reasons = verify(verifier_pipe, verify_prompt)
+            results = True
+            reasons = ''
 
             if results == False and refine <= 2:
                 if refine == 0:
