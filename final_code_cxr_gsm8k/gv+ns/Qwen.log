@@ -1,0 +1,40 @@
+nohup: ignoring input
+[nltk_data] Downloading package punkt_tab to
+[nltk_data]     /home/llm4math/nltk_data...
+[nltk_data]   Package punkt_tab is already up-to-date!
+Downloading shards:   0%|          | 0/8 [00:00<?, ?it/s]Downloading shards:  12%|█▎        | 1/8 [01:31<10:43, 91.89s/it]Downloading shards:  25%|██▌       | 2/8 [03:06<09:21, 93.51s/it]Downloading shards:  38%|███▊      | 3/8 [04:41<07:50, 94.19s/it]Downloading shards:  50%|█████     | 4/8 [06:18<06:20, 95.19s/it]Downloading shards:  62%|██████▎   | 5/8 [07:53<04:45, 95.09s/it]Downloading shards:  75%|███████▌  | 6/8 [09:28<03:10, 95.18s/it]Downloading shards:  88%|████████▊ | 7/8 [11:03<01:35, 95.17s/it]Downloading shards: 100%|██████████| 8/8 [11:44<00:00, 77.81s/it]Downloading shards: 100%|██████████| 8/8 [11:44<00:00, 88.04s/it]
+Loading checkpoint shards:   0%|          | 0/8 [00:00<?, ?it/s]Loading checkpoint shards:  12%|█▎        | 1/8 [00:00<00:00,  7.44it/s]Loading checkpoint shards:  25%|██▌       | 2/8 [00:00<00:00,  7.67it/s]Loading checkpoint shards:  38%|███▊      | 3/8 [00:00<00:00,  7.74it/s]Loading checkpoint shards:  50%|█████     | 4/8 [00:00<00:00,  7.77it/s]Loading checkpoint shards:  62%|██████▎   | 5/8 [00:00<00:00,  7.78it/s]Loading checkpoint shards:  75%|███████▌  | 6/8 [00:00<00:00,  7.79it/s]Loading checkpoint shards:  88%|████████▊ | 7/8 [00:00<00:00,  7.80it/s]Loading checkpoint shards: 100%|██████████| 8/8 [00:01<00:00,  7.93it/s]Loading checkpoint shards: 100%|██████████| 8/8 [00:01<00:00,  7.82it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:00,  7.48it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:00<00:00,  7.44it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:00<00:00,  7.42it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00,  7.43it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00,  7.43it/s]
+Device set to use cuda:4
+Traceback (most recent call last):
+  File "/home/llm4math/sjy/generate_cxr_fork/final_code/gv+ns/Qwen_2.5_14B.py", line 326, in <module>
+    verifier_pipe = pipeline(
+                    ^^^^^^^^^
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/transformers/pipelines/__init__.py", line 1178, in pipeline
+    return pipeline_class(model=model, framework=framework, task=task, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/transformers/pipelines/text_generation.py", line 97, in __init__
+    super().__init__(*args, **kwargs)
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/transformers/pipelines/base.py", line 982, in __init__
+    self.model.to(self.device)
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/transformers/modeling_utils.py", line 3110, in to
+    return super().to(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1340, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/torch/nn/modules/module.py", line 900, in _apply
+    module._apply(fn)
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/torch/nn/modules/module.py", line 927, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/llm4math/miniconda3/envs/generate/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1326, in convert
+    return t.to(
+           ^^^^^
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
