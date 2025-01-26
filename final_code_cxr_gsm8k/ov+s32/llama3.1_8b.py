@@ -9,17 +9,17 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:1"
-verifier_device = "cuda:1"
+device = "cuda:6"
+verifier_device = "cuda:6"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Llama-3.1-8B-Instruct"
 verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"  # gemma(verifier模型)
 num_votes = 1
-input_file = "../MATH_500.jsonl"
-output_file = "./llama3.1.jsonl"
+input_file = "../gsm8k_test.jsonl"
+output_file = "./llama3.1_gsm8k.jsonl"
 start_line = 0
-end_line = 150
+end_line = 300
 threshold = 1e-7
 num_ablations = 32
 
