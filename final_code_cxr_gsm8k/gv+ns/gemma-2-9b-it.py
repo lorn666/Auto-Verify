@@ -19,7 +19,7 @@ num_votes = 1
 input_file = "../gsm8k_test.jsonl"
 output_file = "./res_gemma_gsm8k.jsonl"
 start_line = 0
-end_line = 300
+end_line = 200
 threshold = -10000
 num_ablations = 1
 

@@ -13,19 +13,20 @@ device = "cuda:2"
 verifier_device = "cuda:3"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
-model_path = "meta-llama/Llama-3.1-8B-Instruct"
+model_path = "google/gemma-2-9b-it"
 verifier_model_path = "google/gemma-2-9b-it"
 num_votes = 1
-input_file = "../gsm8k_test.jsonl"
-output_file = "./res_llama3.1_gsm8k.jsonl"
+input_file = "../olympid.jsonl"
+output_file = "./res_gemma_olmpid.jsonl"
 start_line = 0
-end_line = 300
+end_line = 200
 threshold = 1e-7
 num_ablations = 32
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
 model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16).to(device)
+model.to(torch.half)
 
 stop_words = ["###", " ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
@@ -326,7 +327,7 @@ verifier_generate_kwargs = {
 verifier_pipe = pipeline(
     "text-generation",
     model=verifier_model_path,
-    model_kwargs={"torch_dtype": torch.bfloat16},
+    # model_kwargs={"torch_dtype": torch.bfloat16},
     device=verifier_device,
 )
 

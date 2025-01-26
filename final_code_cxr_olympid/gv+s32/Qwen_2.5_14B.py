@@ -9,24 +9,23 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:2"
-verifier_device = "cuda:3"
+device = "cuda:6"
+verifier_device = "cuda:6"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
-model_path = "google/gemma-2-9b-it"
+model_path = "Qwen/Qwen2.5-14B-Instruct"
 verifier_model_path = "google/gemma-2-9b-it"
 num_votes = 1
-input_file = "../gsm8k_test.jsonl"
-output_file = "./res_gemma_gsm8k.jsonl"
+input_file = "../olympid.jsonl"
+output_file = "./res_qwen_olympid.jsonl"
 start_line = 0
-end_line = 300
+end_line = 150
 threshold = 1e-7
 num_ablations = 32
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, padding=False)
 
 model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16).to(device)
-model.to(torch.half)
 
 stop_words = ["###", " ###", "#", "#####", "### ", "##### ", " #####"]
 stop_words_ids = [tokenizer.encode(stop_word, add_special_tokens=False) for stop_word in stop_words]
@@ -243,10 +242,10 @@ def verify(verifier_pipe, prompt) -> bool:
         if match:
             answer = match.group(1).strip().lower()
             # 返回True如果是yes，False如果是no
-            if ("no" not in answer) and ("yes" not in answer):
+            if ("No" not in answer) and ("Yes" not in answer):
                 continue
             # 如果没有找到匹配（但有\boxed），返回True
-            return "no" not in answer, reasons
+            return "No" not in answer, reasons
     return True, reasons
 
 
@@ -327,7 +326,7 @@ verifier_generate_kwargs = {
 verifier_pipe = pipeline(
     "text-generation",
     model=verifier_model_path,
-    # model_kwargs={"torch_dtype": torch.bfloat16},
+    model_kwargs={"torch_dtype": torch.bfloat16},
     device=verifier_device,
 )
 

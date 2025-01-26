@@ -19,7 +19,7 @@ num_votes = 1
 input_file = "../gsm8k_test.jsonl.jsonl"
 output_file = "./res_qwen_gsm8k.jsonl"
 start_line = 0
-end_line = 150
+end_line = 300
 threshold = -10000
 num_ablations = 1
 

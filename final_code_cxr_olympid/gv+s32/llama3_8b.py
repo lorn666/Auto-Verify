@@ -16,10 +16,10 @@ verifier_max_new_tokens = 256
 model_path = "meta-llama/Meta-Llama-3-8B-Instruct"
 verifier_model_path = "google/gemma-2-9b-it"
 num_votes = 1
-input_file = "../MATH_500.jsonl"
-output_file = "./res_llama3.jsonl"
+input_file = "../olympid.jsonl"
+output_file = "./res_llama3_olypid.jsonl"
 start_line = 0
-end_line = 150
+end_line = 200
 threshold = 1e-7
 num_ablations = 32
 
