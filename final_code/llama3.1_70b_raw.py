@@ -324,12 +324,12 @@ verifier_generate_kwargs = {
     "stopping_criteria": stopping_criteria,
 }
 
-verifier_pipe = pipeline(
-    "text-generation",
-    model=verifier_model_path,
-    model_kwargs={"torch_dtype": torch.bfloat16},
-    device=verifier_device,
-)
+# verifier_pipe = pipeline(
+#     "text-generation",
+#     model=verifier_model_path,
+#     model_kwargs={"torch_dtype": torch.bfloat16},
+#     device=verifier_device,
+# )
 
 
 def verifier_generate_text(verifier_pipe, prompt, max_new_tokens):
@@ -511,9 +511,9 @@ with jsonlines.open(input_file) as reader:
             verify_prompt = verifier_prompt_template2.format(
                 Question=Question, Context=Context0, verified_step=generated_texts
             )
-            results, reasons = verify(verifier_pipe, verify_prompt)
-            # results = True
-            # reasons = ''
+            # results, reasons = verify(verifier_pipe, verify_prompt)
+            results = True
+            reasons = ''
 
             if results == False and refine <= 2:
                 if refine == 0:
