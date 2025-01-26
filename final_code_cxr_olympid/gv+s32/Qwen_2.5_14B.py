@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:6"
-verifier_device = "cuda:6"
+device = "cuda:7"
+verifier_device = "cuda:7"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "Qwen/Qwen2.5-14B-Instruct"
@@ -19,7 +19,7 @@ num_votes = 1
 input_file = "../olympid.jsonl"
 output_file = "./res_qwen_olympid.jsonl"
 start_line = 0
-end_line = 150
+end_line = 200
 threshold = 1e-7
 num_ablations = 32
 

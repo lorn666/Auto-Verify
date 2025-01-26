@@ -9,7 +9,7 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:0"
+device = "cuda:1"
 verifier_device = "cuda:1"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
