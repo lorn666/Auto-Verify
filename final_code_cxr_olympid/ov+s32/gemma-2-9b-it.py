@@ -16,10 +16,10 @@ verifier_max_new_tokens = 256
 model_path = "google/gemma-2-9b-it"
 verifier_model_path = "/mnt/d2/wyin/Hera/LLM-for-Math/Direct_Verifier/code/results/new_model_v2/verifier_final_model"
 num_votes = 1
-input_file = "../gsm8k_test.jsonl"
-output_file = "./res_gemma_gsm8k.jsonl"
+input_file = "../olympid.jsonl"
+output_file = "./res_gemma_olympid.jsonl"
 start_line = 0
-end_line = 300
+end_line = 200
 threshold = 1e-7
 num_ablations = 32
 
