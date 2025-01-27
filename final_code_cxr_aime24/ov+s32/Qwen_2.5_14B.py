@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:7"
-verifier_device = "cuda:7"
+device = "cuda:5"
+verifier_device = "cuda:5"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "Qwen/Qwen2.5-14B-Instruct"
