@@ -9,8 +9,8 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:5"
-verifier_device = "cuda:5"
+device = "cuda:1"
+verifier_device = "cuda:1"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "meta-llama/Meta-Llama-3-8B-Instruct"
