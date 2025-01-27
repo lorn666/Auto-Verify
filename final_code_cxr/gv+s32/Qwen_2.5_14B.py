@@ -9,15 +9,15 @@ import jsonlines
 from tqdm import tqdm
 from itertools import islice
 
-device = "cuda:6"
-verifier_device = "cuda:6"
+device = "cuda:7"
+verifier_device = "cuda:7"
 max_new_tokens = 512
 verifier_max_new_tokens = 256
 model_path = "Qwen/Qwen2.5-14B-Instruct"
 verifier_model_path = "google/gemma-2-9b-it"
 num_votes = 1
 input_file = "../MATH_500.jsonl"
-output_file = "./res_qwen.jsonl"
+output_file = "./res_qwen_math.jsonl"
 start_line = 0
 end_line = 150
 threshold = 1e-7
